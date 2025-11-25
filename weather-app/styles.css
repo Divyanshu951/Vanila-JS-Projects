@@ -1,0 +1,244 @@
+:root {
+  /* Color Variables based on the image */
+  --bg-dark: #222831; /* The main dark background behind the widget */
+  --panel-dark: #2b323c; /* The right side panel color */
+  --text-light: #ffffff;
+  --text-gray: #d1d5db;
+  --gradient-start: #5be9f1; /* Cyan-ish */
+  --gradient-end: #5b6af0; /* Purple/Blue-ish */
+  --active-item-bg: #ffffff;
+  --active-item-text: #222831;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #39404d; /* Dark slate background similar to image */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main Widget Container */
+.widget-container {
+  display: flex;
+  width: 800px;
+  max-width: 95%;
+  background-color: var(--panel-dark);
+  border-radius: 35px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: visible; /* Important so the left card can pop out if we wanted, though here it's contained */
+  position: relative;
+}
+
+/* --- LEFT PANEL (Gradient Card) --- */
+.left-panel {
+  flex: 0 0 40%;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 30px;
+  padding: 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  color: white;
+
+  transform: scale(1.03) translateX(15px);
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.left-panel {
+  position: relative;
+}
+
+.left-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35); /* dark overlay */
+  border-radius: 30px;
+  z-index: 0;
+}
+
+.left-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.date-container h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.date-container .full-date {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.weather-summary {
+  margin-top: 60px;
+}
+
+.weather-summary i {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.weather-summary .temp {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.weather-summary .condition {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* --- RIGHT PANEL (Details & Forecast) --- */
+.right-panel {
+  flex: 1;
+  padding: 40px;
+  padding-left: 60px; /* Extra padding to account for the overlap offset */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+}
+
+/* Detail Rows (Precipitation, Humidity, Wind) */
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.detail-row span:first-child {
+  color: var(--text-gray);
+}
+
+/* Forecast Cards List */
+.forecast-list {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+.forecast-item {
+  background-color: #2e3542; /* Slightly different from bg */
+  border-radius: 15px;
+  padding: 15px 10px;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.forecast-item i {
+  font-size: 1.2rem;
+}
+
+.forecast-item .day {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+}
+
+.forecast-item .temp {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Active State for Forecast Item */
+.forecast-item.active {
+  background-color: var(--active-item-bg);
+  color: var(--active-item-text);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+}
+
+.forecast-item.active .day {
+  color: #666;
+}
+
+/* Button */
+.btn-location {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(
+    90deg,
+    #74ebd5 0%,
+    #acb6e5 100%
+  ); /* Placeholder nice gradient */
+  background: linear-gradient(to right, #658bf8, #75baf7); /* Closer to image */
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s;
+}
+
+.btn-location:hover {
+  opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .widget-container {
+    flex-direction: column;
+    width: 90%;
+  }
+
+  .left-panel {
+    width: 100%;
+    transform: none;
+    border-radius: 30px 30px 0 0;
+  }
+
+  .right-panel {
+    padding: 30px;
+    border-radius: 0 0 30px 30px;
+  }
+}

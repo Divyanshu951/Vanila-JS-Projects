@@ -1,3 +1,15 @@
-.hidden {
+.content {
   display: none;
+}
+
+.active {
+  display: block;
+}
+
+span {
+  cursor: pointer;
+}
+
+.preview {
+  background-color: #ffe234;
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>30 Days of JavaScript</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <header>
+        <span class="badge">Challenge Tracker</span>
+        <h1>30 Days of <span>JavaScript</span></h1>
+        <p class="subtitle">
+          A daily journey through code. View the solutions and track progress.
+        </p>
+
+        <!-- Search Input -->
+        <div class="search-wrapper">
+          <div class="search-icon">
+            <i data-lucide="search" width="20" height="20"></i>
+          </div>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search specific day or topic..."
+          />
+        </div>
+      </header>
+
+      <!-- Project List Container -->
+      <main id="projectList">
+        <!-- Items will be injected here by JS -->
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <p>&copy; 2023 JS Challenger. Keep coding.</p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

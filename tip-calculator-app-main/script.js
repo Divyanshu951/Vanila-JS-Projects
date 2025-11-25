@@ -1,129 +1,73 @@
-"use strict";
+// Challenge 6: The "Star Rating" Widget
+// Topics: Click Events, Event Listeners (mouseover, mouseout), CSS Classes, dataset
 
-// ###############################################################
-// ##                       Ch - 1                              ##
-// ###############################################################
+// Assumed DOM: A div.star-rating containing 5 span.star elements, each with a data-value="1", data-value="2", etc.
 
-function enableShiftClick(inboxContainer) {
-  let lastChecked = null; // Stays in the function's scope
+// Problem: Write initStarRating(widget). Use delegation.
 
-  inboxContainer.addEventListener("click", function (e) {
-    // 1. Only run if a checkbox was clicked
-    if (!e.target.matches('input[type="checkbox"]')) {
-      return;
-    }
+// Click: When a star is clicked, all stars up to that star (including itself) get a .filled class. Stars after it lose the .filled class.
 
-    const checkboxes = inboxContainer.querySelectorAll(
-      'input[type="checkbox"]'
-    );
-    const currentCheckbox = e.target;
-    console.log(currentCheckbox);
+// Hover: On mouseover, show a "preview" by adding a .preview class to all stars up to the hovered one. On mouseout, remove all .preview classes (to restore the "clicked" state).
 
-    // 2. Check if shift is held AND there was a previous click
-    if (e.shiftKey && lastChecked) {
-      let inBetween = false;
+// function initStarRating(widget) {
+//   let currStarPoint = 0;
+//   const allStars = widget.querySelectorAll(".star");
 
-      // 3. Loop over all checkboxes
-      checkboxes.forEach((checkbox) => {
-        // Find the start/end of the range
-        if (checkbox === currentCheckbox || checkbox === lastChecked) {
-          inBetween = !inBetween;
-        }
+//   widget.addEventListener("mouseover", function (e) {
+//     const mouseOverStarts = Number(e.target.dataset.value);
+//     updateStars(mouseOverStarts);
+//   });
 
-        // 4. Set the state of all 'in-between' checkboxes
-        if (inBetween) {
-          // This is the critical fix:
-          // Set it to the *same state* as the one being clicked
-          checkbox.checked = currentCheckbox.checked;
-        }
-      });
-    }
+//   widget.addEventListener("mouseout", function () {
+//     updateStars(currStarPoint);
+//   });
 
-    // 5. Update the 'lastChecked' for the next click
-    lastChecked = currentCheckbox;
-  });
-}
+//   widget.addEventListener("click", function (e) {
+//     currStarPoint = Number(e.target.dataset.value);
+//     updateStars(currStarPoint);
+//   });
 
-// How to use it:
-// const inbox = document.querySelector(".inbox");
-// enableShiftClick(inbox);
+//   function updateStars(stars) {
+//     allStars.forEach((ele) => ele.classList.remove("preview"));
 
-// ###############################################################
-// ##                       Ch - 2                              ##
-// ###############################################################
+//     for (let i = 0; i < stars; i++) {
+//       allStars[i].classList.add("preview");
+//     }
+//   }
+// }
 
-// Ch - 2
-const modal = document.getElementById("modal");
+function initStarRating(widget) {
+  let currentRating = 0;
+  // 1. Scope to the specific widget
+  const stars = widget.querySelectorAll(".star");
 
-function initModal() {
-  document.addEventListener("click", function (e) {
-    if (e.target.matches("#open-btn")) {
-      modal.classList.remove("hidden");
-    }
-
-    if (e.target.matches("#close-btn")) {
-      modal.classList.add("hidden");
-    }
-
-    if (e.target === modal) {
-      modal.classList.add("hidden");
-    }
-  });
-}
-
-// initModal();
-
-// ###############################################################
-// ##                       Ch - 3                              ##
-// ###############################################################
-
-function initFilter(input, list) {
-  // 1. Cache the lower-cased input *once* before the loop.
-  const filter = input.toLowerCase();
-
-  list.forEach((item) => {
-    const itemText = item.textContent.toLowerCase();
-
-    // 2. Use the cached 'filter' variable for comparison.
-    if (itemText.includes(filter)) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-}
-
-// const filterInput = document.getElementById("filter-input");
-// const listItems = document.querySelectorAll("#data-list li");
-
-// filterInput.addEventListener("keyup", function (e) {
-//   initFilter(e.target.value, listItems);
-// });
-
-// ###############################################################
-// ##                       Ch - 4 "Konami Code"                ##
-// ###############################################################
-
-document.body.addEventListener("keydown", function (e) {
-  const accessStr = [
-    "ArrowUp",
-    "ArrowUp",
-    "ArrowDown",
-    "ArrowDown",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowLeft",
-    "ArrowRight",
-    "b",
-    "a",
-  ];
-
-  if (e.key === accessStr[0]) {
-    let count = 0;
-    check(count);
+  function highlight(count, className) {
+    stars.forEach((star) => {
+      // Clean up both classes to be safe
+      star.classList.remove("filled", "preview");
+      if (star.dataset.value <= count) {
+        star.classList.add(className);
+      }
+    });
   }
-});
 
-function check(i) {
-  console.log(i);
+  widget.addEventListener("mouseover", (e) => {
+    // 2. Safety Check
+    if (!e.target.matches(".star")) return;
+    highlight(e.target.dataset.value, "preview");
+  });
+
+  widget.addEventListener("mouseout", () => {
+    // Restore the "filled" state based on currentRating
+    highlight(currentRating, "filled");
+  });
+
+  widget.addEventListener("click", (e) => {
+    if (!e.target.matches(".star")) return;
+    currentRating = e.target.dataset.value;
+    highlight(currentRating, "filled");
+  });
 }
+
+const widget = document.querySelector(".star-rating");
+initStarRating(widget);
