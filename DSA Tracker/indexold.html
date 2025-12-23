@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Syllabus Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              dark: {
+                bg: "#0f172a",
+                card: "#1e293b",
+                border: "#334155",
+                text: "#f1f5f9",
+                muted: "#94a3b8",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Smooth transition for accordions */
+      .accordion-content {
+        transition: grid-template-rows 0.3s ease-out, padding 0.3s ease;
+        display: grid;
+        grid-template-rows: 0fr;
+        overflow: hidden;
+      }
+
+      .accordion-content.active {
+        grid-template-rows: 1fr;
+      }
+
+      .accordion-inner {
+        min-height: 0;
+      }
+
+      /* Checkbox styling */
+      .checkbox-wrapper input:checked + div {
+        background-color: #10b981;
+        border-color: #10b981;
+      }
+
+      .checkbox-wrapper input:checked + div svg {
+        display: block;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #1e293b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #475569;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    </style>
+    <script>
+      // Initialize Theme immediately to prevent flash
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+  </head>
+  <body
+    class="bg-[#f8fafc] dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col"
+  >
+    <!-- Navbar / Header -->
+    <header
+      class="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 sticky top-0 z-50 transition-colors"
+    >
+      <div class="max-w-6xl mx-auto px-4 py-4">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+          <div class="flex items-center justify-between w-full md:w-auto">
+            <div>
+              <h1
+                class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight"
+              >
+                DSA
+                <span class="text-indigo-600 dark:text-indigo-400">Map</span>
+              </h1>
+              <div class="flex items-center gap-2">
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  Structured Roadmap & Problem Tracker
+                </p>
+                <span
+                  id="db-status"
+                  class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 px-2 py-0.5 rounded-full border dark:border-gray-600"
+                  >Connecting...</span
+                >
+              </div>
+            </div>
+            <!-- Mobile Theme Toggle -->
+            <button
+              onclick="window.toggleTheme()"
+              class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+            >
+              <i class="fas fa-moon dark:hidden"></i>
+              <i class="fas fa-sun hidden dark:inline text-yellow-400"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-4 w-full md:w-auto">
+            <!-- Desktop Theme Toggle -->
+            <button
+              onclick="window.toggleTheme()"
+              class="hidden md:flex items-center justify-center w-10 h-10 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 transition-colors"
+              title="Toggle Dark Mode"
+            >
+              <i class="fas fa-moon dark:hidden"></i>
+              <i class="fas fa-sun hidden dark:inline text-yellow-400"></i>
+            </button>
+
+            <!-- Global Progress Card -->
+            <div
+              class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 w-full md:w-72 border border-gray-200 dark:border-gray-600"
+            >
+              <div
+                class="flex justify-between text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1"
+              >
+                <span>Total Mastery</span>
+                <span id="global-percent">0%</span>
+              </div>
+              <div
+                class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5"
+              >
+                <div
+                  id="global-progress-bar"
+                  class="bg-indigo-600 dark:bg-indigo-500 h-2.5 rounded-full transition-all duration-500"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <div
+                class="text-xs text-right mt-1 text-gray-400 dark:text-gray-400"
+                id="global-count"
+              >
+                0 / 0 Completed
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+      <!-- Controls -->
+      <div class="flex justify-end mb-6 space-x-2">
+        <button
+          onclick="window.resetProgress()"
+          class="text-xs font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-1.5 rounded transition"
+        >
+          <i class="fas fa-undo mr-1"></i> Reset All
+        </button>
+      </div>
+
+      <!-- Syllabus Container -->
+      <div id="syllabus-container" class="space-y-4">
+        <!-- Sections injected by JS -->
+        <div class="text-center text-gray-400 py-10">Loading Syllabus...</div>
+      </div>
+    </main>
+
+    <!-- <footer
+      class="bg-white dark:bg-gray-800 border-t dark:border-gray-700 mt-12 py-8 text-center text-sm text-gray-500 dark:text-gray-400 transition-colors"
+    >
+      <p>Syncing with Firebase Database.</p>
+    </footer> -->
+
+    <!-- Using Module Type for Firebase Imports -->
+    <script type="module">
+      // --- 0. FIREBASE SETUP ---
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        get,
+        set,
+        update,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAx_cwOhFJibeaqXmh9NPJZf9x6R7LzTF0",
+        authDomain: "dsatracker951.firebaseapp.com",
+        projectId: "dsatracker951",
+        storageBucket: "dsatracker951.firebasestorage.app",
+        messagingSenderId: "724452945514",
+        appId: "1:724452945514:web:e6e6e1a04dab66678ae413",
+        measurementId: "G-GMJ1S2R008",
+        databaseURL:
+          "https://dsatracker951-default-rtdb.europe-west1.firebasedatabase.app",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      // Database references
+      const dbRef = ref(db, "DSATracker/data");
+
+      // --- 1. DATA CONFIGURATION ---
+      const syllabusData = [
+        {
+          title: "Level 3: Array Problems",
+          id: "arrays",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-book-open",
+              color: "text-blue-600 dark:text-blue-400",
+              bgColor: "bg-blue-50 dark:bg-blue-900/20",
+              groups: [
+                {
+                  name: "Introduction",
+                  items: [
+                    { name: "What is an array?", link: "#" },
+                    {
+                      name: "Basic characteristics: contiguous memory, fixed size, indexed elements",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Array Declaration and Initialization",
+                  items: [
+                    {
+                      name: "Syntax for declaring arrays in various programming languages",
+                      link: "#",
+                    },
+                    {
+                      name: "Initializing arrays with default or specific values",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Accessing Elements",
+                  items: [
+                    {
+                      name: "Indexing: accessing elements using their position",
+                      link: "#",
+                    },
+                    {
+                      name: "Address calculation for element access",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Operations",
+                  items: [
+                    {
+                      name: "Basic operations like insertion, deletion, updating",
+                      link: "#",
+                    },
+                    { name: "Swapping elements", link: "#" },
+                  ],
+                },
+                {
+                  name: "Multi-dimensional",
+                  items: [
+                    { name: "Understanding 2D arrays (matrices)", link: "#" },
+                    {
+                      name: "Accessing elements in multi-dimensional arrays",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Manipulation",
+                  items: [
+                    { name: "Reversing an array", link: "#" },
+                    {
+                      name: "Finding the maximum or minimum element",
+                      link: "#",
+                    },
+                    {
+                      name: "Finding the sum or average of elements",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Traversal",
+                  items: [
+                    { name: "Iterating through all elements", link: "#" },
+                    {
+                      name: "Different approaches (e.g., for loop, while loop)",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Subarrays",
+                  items: [
+                    {
+                      name: "Creating subarrays from existing arrays",
+                      link: "#",
+                    },
+                    {
+                      name: "Understanding slicing for specific ranges",
+                      link: "#",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Find largest element in an array", link: "#" },
+                    { name: "Second largest element in an array", link: "#" },
+                    {
+                      name: "Count the frequency of an element in an array",
+                      link: "#",
+                    },
+                    {
+                      name: "Find the minimum (or maximum) element of an array",
+                      link: "#",
+                    },
+                    { name: "Rotate an array by K", link: "#" },
+                    { name: "2 sum", link: "#" },
+                    { name: "Longest subarray with sum", link: "#" },
+                    {
+                      name: "Find if a given element is in a sorted array (binary search)",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "Move zeros", link: "#" },
+                    {
+                      name: "Best Time to Buy and Sell Stock (Sliding Window)",
+                      link: "#",
+                    },
+                    { name: "3 sum", link: "#" },
+                    { name: "Next Permutation", link: "#" },
+                    { name: "Top K frequent element", link: "#" },
+                    { name: "Maximum Subarray", link: "#" },
+                    { name: "Container With Most Water", link: "#" },
+                    { name: "Find all subsets", link: "#" },
+                    { name: "Set Matrix Zero", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Find missing positive", link: "#" },
+                    { name: "4 sum", link: "#" },
+                    { name: "Best Time to Buy and Sell Stock III", link: "#" },
+                    { name: "Reverse pairs", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 4: Sorting & Searching (Mastery)",
+          id: "sorting_searching",
+          columns: [
+            {
+              title: "Learn Algorithms",
+              icon: "fa-project-diagram",
+              color: "text-purple-600 dark:text-purple-400",
+              bgColor: "bg-purple-50 dark:bg-purple-900/20",
+              groups: [
+                {
+                  name: "Basic Sorting",
+                  items: [
+                    { name: "Selection Sort", link: "#" },
+                    { name: "Bubble Sort", link: "#" },
+                    { name: "Insertion Sort", link: "#" },
+                  ],
+                },
+                {
+                  name: "Advanced Sorting",
+                  items: [
+                    { name: "Merge Sort (Divide & Conquer)", link: "#" },
+                    { name: "Quick Sort", link: "#" },
+                    { name: "Heap Sort", link: "#" },
+                    { name: "Cycle Sort", link: "#" },
+                    { name: "Counting Sort & Radix Sort", link: "#" },
+                  ],
+                },
+                {
+                  name: "Search Fundamentals",
+                  items: [
+                    { name: "Linear Search", link: "#" },
+                    {
+                      name: "Binary Search (Iterative & Recursive)",
+                      link: "#",
+                    },
+                    { name: "Lower Bound & Upper Bound", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice Problems",
+              icon: "fa-crosshairs",
+              color: "text-orange-600 dark:text-orange-400",
+              bgColor: "bg-orange-50 dark:bg-orange-900/20",
+              groups: [
+                {
+                  name: "Easy (Foundations)",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Binary Search Implementation", link: "#" },
+                    { name: "Implement Lower Bound", link: "#" },
+                    { name: "Implement Upper Bound", link: "#" },
+                    { name: "Search Insert Position", link: "#" },
+                    { name: "Floor and Ceil in Sorted Array", link: "#" },
+                    {
+                      name: "Find First and Last Position of Element",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Medium (Logic Building)",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    {
+                      name: "Search in Rotated Sorted Array I (Unique)",
+                      link: "#",
+                    },
+                    {
+                      name: "Search in Rotated Sorted Array II (Duplicates)",
+                      link: "#",
+                    },
+                    { name: "Find Minimum in Rotated Sorted Array", link: "#" },
+                    { name: "Single Element in a Sorted Array", link: "#" },
+                    { name: "Find Peak Element", link: "#" },
+                    { name: "Find Nth Root of an Integer", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard (BS on Answers)",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Koko Eating Bananas", link: "#" },
+                    { name: "Minimum days to make M bouquets", link: "#" },
+                    {
+                      name: "Capacity to Ship Packages within D Days",
+                      link: "#",
+                    },
+                    { name: "Aggressive Cows", link: "#" },
+                    { name: "Book Allocation Problem", link: "#" },
+                    { name: "Split Array Largest Sum", link: "#" },
+                    { name: "Median of Two Sorted Arrays", link: "#" },
+                    { name: "K-th Element of Two Sorted Arrays", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 5: Strings & Sliding Window",
+          id: "strings",
+          columns: [
+            {
+              title: "Learn & Patterns",
+              icon: "fa-font",
+              color: "text-pink-600 dark:text-pink-400",
+              bgColor: "bg-pink-50 dark:bg-pink-900/20",
+              groups: [
+                {
+                  name: "String Basics",
+                  items: [
+                    { name: "ASCII vs Unicode", link: "#" },
+                    { name: "Immutability of Strings", link: "#" },
+                    { name: "StringBuilder / StringBuffer", link: "#" },
+                    { name: "Rabin-Karp Algorithm (Rolling Hash)", link: "#" },
+                    { name: "KMP Algorithm (Pattern Matching)", link: "#" },
+                  ],
+                },
+                {
+                  name: "Sliding Window Pattern",
+                  items: [
+                    { name: "Fixed Size Window", link: "#" },
+                    { name: "Variable Size Window", link: "#" },
+                    { name: "Two Pointers Technique", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Add Strings", link: "#" },
+                    { name: "Reverse words in a String", link: "#" },
+                    { name: "Valid Palindrome", link: "#" },
+                    { name: "Valid Anagram", link: "#" },
+                    {
+                      name: "Find the Index of the First Occurrence",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    {
+                      name: "Longest Substring Without Repeating Characters",
+                      link: "#",
+                    },
+                    { name: "Sort Characters By Frequency", link: "#" },
+                    { name: "Group Anagrams", link: "#" },
+                    { name: "Integer to Roman", link: "#" },
+                    { name: "Basic Calculator II", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Integer to English Words", link: "#" },
+                    { name: "Minimum Window Substring", link: "#" },
+                    { name: "Distinct Subsequences", link: "#" },
+                    { name: "Sliding Window Median", link: "#" },
+                  ],
+                },
+                {
+                  name: "Sliding Window Specials",
+                  badge:
+                    "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
+                  items: [
+                    {
+                      name: "Longest Substring with At Least K Repeating",
+                      link: "#",
+                    },
+                    { name: "Max Consecutive Ones III", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 6: Stacks",
+          id: "stacks",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-layer-group",
+              color: "text-amber-600 dark:text-amber-400",
+              bgColor: "bg-amber-50 dark:bg-amber-900/20",
+              groups: [
+                {
+                  name: "Concepts",
+                  items: [
+                    { name: "LIFO Principle", link: "#" },
+                    {
+                      name: "Implementation using Arrays vs Linked Lists",
+                      link: "#",
+                    },
+                    { name: "Monotonic Stack Pattern", link: "#" },
+                    { name: "Stack for Recursion Simulation", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [{ name: "Valid Parentheses", link: "#" }],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "Min Stack", link: "#" },
+                    { name: "Generate Parentheses", link: "#" },
+                    { name: "Car Fleet", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Largest Rectangle in Histogram", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 7: Linked Lists",
+          id: "linked_lists",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-link",
+              color: "text-cyan-600 dark:text-cyan-400",
+              bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
+              groups: [
+                {
+                  name: "Singly Linked List",
+                  items: [
+                    { name: "What are linked lists?", link: "#" },
+                    { name: "Inserting node (Head, Tail, Middle)", link: "#" },
+                    { name: "Deleting node", link: "#" },
+                    { name: "Traversal of a node", link: "#" },
+                    { name: "Searching a node", link: "#" },
+                  ],
+                },
+                {
+                  name: "Doubly Linked List",
+                  items: [
+                    { name: "What are doubly linked lists?", link: "#" },
+                    { name: "Inserting node", link: "#" },
+                    { name: "Deleting node", link: "#" },
+                    { name: "Reversing DLL", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Reverse Linked List", link: "#" },
+                    { name: "Merge Two Sorted Lists", link: "#" },
+                    { name: "Linked List Cycle", link: "#" },
+                    { name: "Middle of the Linked List", link: "#" },
+                    { name: "Remove Duplicates from Sorted List", link: "#" },
+                  ],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "Linked List Cycle II", link: "#" },
+                    { name: "Intersection of Two Linked Lists", link: "#" },
+                    { name: "Design Browser History", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Merge k Sorted Lists", link: "#" },
+                    { name: "Reverse Nodes in k-Group", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 8: Recursion",
+          id: "recursion",
+          columns: [
+            {
+              title: "Learn & Basic Drills",
+              icon: "fa-recycle",
+              color: "text-teal-600 dark:text-teal-400",
+              bgColor: "bg-teal-50 dark:bg-teal-900/20",
+              groups: [
+                {
+                  name: "Learn Basics",
+                  items: [
+                    { name: "What is recursion?", link: "#" },
+                    {
+                      name: "Understand 3 major steps (Base Case, Work, Recursive Call)",
+                      link: "#",
+                    },
+                    { name: "Stack Space Visualization", link: "#" },
+                  ],
+                },
+                {
+                  name: "Solve Basic Problems",
+                  items: [
+                    { name: "Find power using recursion", link: "#" },
+                    { name: "Fibonacci series", link: "#" },
+                    { name: "Sum of digits", link: "#" },
+                    { name: "Sum of natural numbers", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Standard Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "Generate Parentheses", link: "#" },
+                    { name: "Combination Sum", link: "#" },
+                    { name: "Combination Sum II", link: "#" },
+                    { name: "Pow(x, n)", link: "#" },
+                    { name: "K-th Symbol in Grammar", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 9: Trees & BST",
+          id: "trees",
+          columns: [
+            {
+              title: "Learn Basics",
+              icon: "fa-tree",
+              color: "text-green-600 dark:text-green-400",
+              bgColor: "bg-green-50 dark:bg-green-900/20",
+              groups: [
+                {
+                  name: "Introduction",
+                  items: [
+                    {
+                      name: "Tree terminologies: nodes, edges, root, leaf",
+                      link: "#",
+                    },
+                    { name: "Types: Binary, BST, Balanced", link: "#" },
+                  ],
+                },
+                {
+                  name: "Binary Trees",
+                  items: [
+                    { name: "Definition and characteristics", link: "#" },
+                    { name: "Representation: Array vs Linked", link: "#" },
+                  ],
+                },
+                {
+                  name: "Traversals",
+                  items: [
+                    {
+                      name: "DFS: In-order, Pre-order, Post-order (Recursive & Iterative)",
+                      link: "#",
+                    },
+                    { name: "BFS: Level-order traversal", link: "#" },
+                  ],
+                },
+                {
+                  name: "Binary Search Trees (BST)",
+                  items: [
+                    { name: "What is a BST?", link: "#" },
+                    { name: "Operations: Insert, Delete, Search", link: "#" },
+                    {
+                      name: "Properties: Ordering, Balanced vs Unbalanced",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Tree Algorithms",
+                  items: [
+                    { name: "Lowest Common Ancestor (LCA)", link: "#" },
+                    { name: "Finding height or depth", link: "#" },
+                    { name: "Diameter of a tree", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Maximum Depth of Binary Tree", link: "#" },
+                    { name: "Invert Binary Tree", link: "#" },
+                    { name: "Path Sum", link: "#" },
+                    { name: "Same Tree", link: "#" },
+                    { name: "Binary Tree Level Order Traversal", link: "#" },
+                  ],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    {
+                      name: "Binary Tree Zigzag Level Order Traversal",
+                      link: "#",
+                    },
+                    {
+                      name: "Lowest Common Ancestor of a Binary Tree",
+                      link: "#",
+                    },
+                    {
+                      name: "Construct Binary Tree from Inorder and Postorder",
+                      link: "#",
+                    },
+                    { name: "Validate Binary Search Tree", link: "#" },
+                    { name: "Kth Smallest Element in a BST", link: "#" },
+                    { name: "Binary Tree Right Side View", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Binary Tree Maximum Path Sum", link: "#" },
+                    {
+                      name: "Serialize and Deserialize Binary Tree",
+                      link: "#",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 10: Tries",
+          id: "tries",
+          columns: [
+            {
+              title: "Learn Basics",
+              icon: "fa-share-alt",
+              color: "text-gray-600 dark:text-gray-400",
+              bgColor: "bg-gray-100 dark:bg-gray-800",
+              groups: [
+                {
+                  name: "Introduction",
+                  items: [
+                    { name: "What is a Trie? Nodes, Edges, Root", link: "#" },
+                    { name: "Use cases: Autocomplete, Dictionary", link: "#" },
+                  ],
+                },
+                {
+                  name: "Structure & Operations",
+                  items: [
+                    { name: "Trie Node Structure (Data fields)", link: "#" },
+                    { name: "Insertion, Search, Deletion", link: "#" },
+                  ],
+                },
+                {
+                  name: "Advanced",
+                  items: [
+                    { name: "Ternary Search Trees (TSTs)", link: "#" },
+                    { name: "Space efficiency approaches", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Standard",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "Implement Trie (Prefix Tree)", link: "#" },
+                    { name: "Implement Trie II", link: "#" },
+                    {
+                      name: "Design Add and Search Words Data Structure",
+                      link: "#",
+                    },
+                    { name: "Word Search II (Hard)", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 11: Backtracking",
+          id: "backtracking",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-undo",
+              color: "text-rose-600 dark:text-rose-400",
+              bgColor: "bg-rose-50 dark:bg-rose-900/20",
+              groups: [
+                {
+                  name: "Introduction",
+                  items: [
+                    {
+                      name: "What is backtracking? When to use it?",
+                      link: "#",
+                    },
+                    { name: "Recursive vs Iterative approaches", link: "#" },
+                  ],
+                },
+                {
+                  name: "The Algorithm",
+                  items: [
+                    {
+                      name: "Steps: Choose, Test, Make Choice, Undo (Backtrack)",
+                      link: "#",
+                    },
+                    { name: "Pseudocode template", link: "#" },
+                    { name: "Base cases and Termination", link: "#" },
+                  ],
+                },
+                {
+                  name: "Classic Examples",
+                  items: [
+                    { name: "N-Queens problem", link: "#" },
+                    { name: "Sudoku solving", link: "#" },
+                    { name: "Permutations and Combinations", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Problems",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "Subsets", link: "#" },
+                    { name: "Subsets II", link: "#" },
+                    { name: "Permutations", link: "#" },
+                    { name: "Palindrome Partitioning", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [{ name: "N-Queens", link: "#" }],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 12: Heap Priority Queue",
+          id: "heaps",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-layer-group",
+              color: "text-slate-600 dark:text-slate-400",
+              bgColor: "bg-slate-100 dark:bg-slate-800",
+              groups: [
+                {
+                  name: "Introduction",
+                  items: [
+                    { name: "What is a heap? (Max vs Min)", link: "#" },
+                    { name: "Heap Property (Parent vs Child)", link: "#" },
+                  ],
+                },
+                {
+                  name: "Binary Heap",
+                  items: [
+                    { name: "Definition and Characteristics", link: "#" },
+                    { name: "Operations: Insert, Delete, Extract", link: "#" },
+                  ],
+                },
+                {
+                  name: "Heapify Operations",
+                  items: [
+                    { name: "Up-heap (Percolate up)", link: "#" },
+                    { name: "Down-heap (Percolate down)", link: "#" },
+                    { name: "Complexity Analysis", link: "#" },
+                  ],
+                },
+                {
+                  name: "Advanced",
+                  items: [
+                    { name: "Priority Queue Interface", link: "#" },
+                    { name: "Binomial / Fibonacci Heaps (Theory)", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Kth Largest Element in an Array", link: "#" },
+                    { name: "Last Stone Weight", link: "#" },
+                  ],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "K Closest Points to Origin", link: "#" },
+                    { name: "Reorganize String", link: "#" },
+                    { name: "Cheapest Flights Within K Stops", link: "#" },
+                    { name: "Task Scheduler", link: "#" },
+                    { name: "Hand of Straights", link: "#" },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Design Twitter", link: "#" },
+                    { name: "Find Median from Data Stream", link: "#" },
+                    { name: "Top K Frequent Elements", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 13: Graphs",
+          id: "graphs",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-project-diagram",
+              color: "text-indigo-600 dark:text-indigo-400",
+              bgColor: "bg-indigo-50 dark:bg-indigo-900/20",
+              groups: [
+                {
+                  name: "Basics",
+                  items: [
+                    { name: "What is a graph? (Nodes, Edges)", link: "#" },
+                    {
+                      name: "Directed vs Undirected, Weighted vs Unweighted",
+                      link: "#",
+                    },
+                    {
+                      name: "Representations: Adjacency Matrix vs List",
+                      link: "#",
+                    },
+                  ],
+                },
+                {
+                  name: "Traversal",
+                  items: [
+                    { name: "Breadth-First Search (BFS)", link: "#" },
+                    { name: "Depth-First Search (DFS)", link: "#" },
+                  ],
+                },
+                {
+                  name: "Shortest Path Algorithms",
+                  items: [
+                    { name: "Dijkstra's Algorithm", link: "#" },
+                    { name: "Bellman-Ford Algorithm", link: "#" },
+                    { name: "Floyd-Warshall Algorithm", link: "#" },
+                  ],
+                },
+                {
+                  name: "Advanced Algo",
+                  items: [
+                    { name: "A* Algorithm", link: "#" },
+                    { name: "Ford-Fulkerson & Edmonds-Karp", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Standard Problems",
+                  badge:
+                    "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+                  items: [
+                    { name: "Number of Provinces", link: "#" },
+                    { name: "Number of Islands", link: "#" },
+                    { name: "Max Area of Island", link: "#" },
+                    { name: "Surrounded Regions", link: "#" },
+                    { name: "Rotting Oranges", link: "#" },
+                    { name: "Course Schedule I", link: "#" },
+                    { name: "Course Schedule II", link: "#" },
+                    { name: "Word Ladder", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 14: 1-D Dynamic Programming",
+          id: "dp_1d",
+          columns: [
+            {
+              title: "Learn",
+              icon: "fa-chart-line",
+              color: "text-fuchsia-600 dark:text-fuchsia-400",
+              bgColor: "bg-fuchsia-50 dark:bg-fuchsia-900/20",
+              groups: [
+                {
+                  name: "Concepts",
+                  items: [
+                    { name: "Memoization (Top-Down)", link: "#" },
+                    { name: "Tabulation (Bottom-Up)", link: "#" },
+                    { name: "Space Optimization", link: "#" },
+                  ],
+                },
+                {
+                  name: "Classic Patterns",
+                  items: [
+                    { name: "Fibonacci Sequence", link: "#" },
+                    { name: "Coin Change", link: "#" },
+                    { name: "Longest Increasing Subsequence (LIS)", link: "#" },
+                    { name: "Longest Common Subsequence (LCS)", link: "#" },
+                    { name: "Knapsack Problems (0/1, Subset Sum)", link: "#" },
+                    { name: "Edit Distance", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Practice",
+              icon: "fa-code",
+              color: "text-emerald-600 dark:text-emerald-400",
+              bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+              groups: [
+                {
+                  name: "Easy",
+                  badge:
+                    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+                  items: [
+                    { name: "Climbing Stairs", link: "#" },
+                    { name: "Min Cost Climbing Stairs", link: "#" },
+                    { name: "Divisor Game", link: "#" },
+                  ],
+                },
+                {
+                  name: "Medium",
+                  badge:
+                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                  items: [
+                    { name: "House Robber", link: "#" },
+                    { name: "House Robber II", link: "#" },
+                    { name: "Longest Palindromic Substring", link: "#" },
+                    { name: "Palindromic Substrings", link: "#" },
+                    { name: "Decode Ways", link: "#" },
+                    { name: "Coin Change", link: "#" },
+                    { name: "Word Break", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Level 15: 2-D DP & Advanced Graphs",
+          id: "dp_2d",
+          columns: [
+            {
+              title: "2-D Dynamic Programming",
+              icon: "fa-th",
+              color: "text-purple-600 dark:text-purple-400",
+              bgColor: "bg-purple-50 dark:bg-purple-900/20",
+              groups: [
+                {
+                  name: "String DP",
+                  badge:
+                    "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300",
+                  items: [
+                    { name: "Longest Common Subsequence", link: "#" },
+                    { name: "Longest Palindromic Subsequence", link: "#" },
+                    { name: "Distinct Subsequences (Hard)", link: "#" },
+                  ],
+                },
+                {
+                  name: "Grid/Math DP",
+                  badge:
+                    "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
+                  items: [
+                    { name: "Unique Paths", link: "#" },
+                    { name: "Unique Paths II", link: "#" },
+                    { name: "Triangle", link: "#" },
+                    { name: "Target Sum", link: "#" },
+                    { name: "Longest Increasing Path in a Matrix", link: "#" },
+                    { name: "Burst Balloons (Hard)", link: "#" },
+                    { name: "Regular Expression Matching", link: "#" },
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Advanced Graphs",
+              icon: "fa-project-diagram",
+              color: "text-blue-600 dark:text-blue-400",
+              bgColor: "bg-blue-50 dark:bg-blue-900/20",
+              groups: [
+                {
+                  name: "Hard Problems",
+                  badge:
+                    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                  items: [
+                    { name: "Min Cost to Connect All Points", link: "#" },
+                    { name: "Swim in Rising Water", link: "#" },
+                    { name: "Reconstruct Itinerary", link: "#" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+      // --- 2. STATE MANAGEMENT ---
+      let completedItems = new Set();
+
+      // Initialize App
+      function init() {
+        renderSyllabus();
+        loadProgress();
+      }
+
+      // Fetch from Firebase
+      function loadProgress() {
+        const statusEl = document.getElementById("db-status");
+        statusEl.textContent = "Syncing...";
+
+        get(dbRef)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              const items = data.completed || [];
+              completedItems = new Set(items);
+              statusEl.textContent = "Online";
+              statusEl.className =
+                "text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-2 py-0.5 rounded-full border dark:border-green-800";
+            } else {
+              statusEl.textContent = "New Data";
+              statusEl.className =
+                "text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full border dark:border-blue-800";
+            }
+            renderSyllabus();
+            updateAllProgress();
+          })
+          .catch((error) => {
+            console.error("Firebase Error:", error);
+            statusEl.textContent = "Offline";
+            statusEl.className =
+              "text-xs bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 px-2 py-0.5 rounded-full border dark:border-red-800";
+          });
+      }
+
+      // Save to Firebase
+      function saveProgress() {
+        const statusEl = document.getElementById("db-status");
+        statusEl.textContent = "Saving...";
+
+        const dataToSave = {
+          completed: [...completedItems],
+          lastUpdated: new Date().toISOString(),
+        };
+
+        update(dbRef, dataToSave)
+          .then(() => {
+            statusEl.textContent = "Saved";
+            setTimeout(() => {
+              // Check current theme to restore correct class
+              const isDark =
+                document.documentElement.classList.contains("dark");
+              statusEl.textContent = "Online";
+            }, 1000);
+          })
+          .catch((error) => {
+            console.error("Save failed:", error);
+            statusEl.textContent = "Error Saving";
+          });
+
+        updateAllProgress();
+      }
+
+      // --- 3. RENDERING ---
+      function renderSyllabus() {
+        const container = document.getElementById("syllabus-container");
+        container.innerHTML = "";
+
+        syllabusData.forEach((section, sectionIndex) => {
+          const sectionEl = document.createElement("div");
+          sectionEl.className =
+            "bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors";
+
+          // --- SECTION HEADER ---
+          const header = document.createElement("div");
+          header.className =
+            "p-5 bg-white dark:bg-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-750 transition flex justify-between items-center select-none group";
+          header.onclick = () => window.toggleMainAccordion(sectionIndex);
+
+          header.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="bg-indigo-600 dark:bg-indigo-500 text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="fas fa-layer-group text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-lg text-gray-800 dark:text-white">${section.title}</h2>
+                            <div class="text-xs text-gray-400 dark:text-gray-500 mt-1 progress-text-${sectionIndex}">0% Completed</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="hidden md:block w-32 h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-500 dark:bg-indigo-400 rounded-full transition-all duration-500 section-bar-${sectionIndex}" style="width: 0%"></div>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 dark:text-gray-500 transition-transform duration-300" id="arrow-${sectionIndex}"></i>
+                    </div>
+                `;
+
+          // --- SECTION CONTENT ---
+          const content = document.createElement("div");
+          content.id = `content-${sectionIndex}`;
+          content.className =
+            "accordion-content border-t border-gray-100 dark:border-gray-700";
+
+          const innerContent = document.createElement("div");
+          innerContent.className =
+            "accordion-inner bg-gray-50/30 dark:bg-gray-900/30";
+
+          if (section.columns) {
+            const grid = document.createElement("div");
+            grid.className = "grid grid-cols-1 md:grid-cols-2 gap-6 p-6";
+
+            section.columns.forEach((col, colIndex) => {
+              const colDiv = document.createElement("div");
+              colDiv.className = "flex flex-col gap-3";
+
+              colDiv.innerHTML = `
+                            <div class="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="${col.bgColor} ${col.color} p-2 rounded-md">
+                                    <i class="fas ${col.icon}"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-700 dark:text-gray-200">${col.title}</h3>
+                            </div>
+                        `;
+
+              col.groups.forEach((group, groupIndex) => {
+                const groupEl = document.createElement("div");
+                groupEl.className =
+                  "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow";
+                const uniqueGroupId = `${section.id}-${colIndex}-${groupIndex}`;
+
+                const groupHeader = document.createElement("div");
+                groupHeader.className =
+                  "p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition select-none";
+                groupHeader.onclick = () =>
+                  window.toggleSubAccordion(uniqueGroupId);
+
+                groupHeader.innerHTML = `
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium text-sm text-gray-700 dark:text-gray-200">${
+                                      group.name
+                                    }</span>
+                                    ${
+                                      group.badge
+                                        ? `<span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${group.badge} uppercase tracking-wider">Problem Set</span>`
+                                        : ""
+                                    }
+                                </div>
+                                <i class="fas fa-chevron-right text-xs text-gray-300 dark:text-gray-600 transition-transform duration-200" id="arrow-${uniqueGroupId}"></i>
+                            `;
+
+                const groupContent = document.createElement("div");
+                groupContent.id = `content-${uniqueGroupId}`;
+                groupContent.className =
+                  "accordion-content bg-gray-50 dark:bg-gray-900/50";
+
+                const groupInner = document.createElement("div");
+                groupInner.className = "accordion-inner p-2 space-y-1";
+
+                group.items.forEach((item, itemIndex) => {
+                  const itemId = `${uniqueGroupId}-${itemIndex}`;
+                  const isChecked = completedItems.has(itemId);
+
+                  const itemRow = document.createElement("div");
+                  itemRow.className =
+                    "flex items-start p-2 hover:bg-white dark:hover:bg-gray-800/80 rounded transition group/item";
+                  itemRow.innerHTML = `
+                                    <label class="checkbox-wrapper flex items-start cursor-pointer pt-0.5">
+                                        <input type="checkbox" class="sr-only" 
+                                            onchange="window.toggleItem('${itemId}')" 
+                                            ${isChecked ? "checked" : ""}>
+                                        <div class="w-4 h-4 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 flex items-center justify-center transition hover:border-indigo-400 dark:hover:border-indigo-400">
+                                            <svg class="w-2.5 h-2.5 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                                        </div>
+                                    </label>
+                                    <div class="ml-3 flex-grow min-w-0">
+                                        <div class="text-sm text-gray-600 dark:text-gray-300 ${
+                                          isChecked
+                                            ? "line-through text-gray-400 dark:text-gray-500"
+                                            : ""
+                                        }" id="text-${itemId}">${
+                    item.name
+                  }</div>
+                                    </div>
+                                    ${
+                                      item.link
+                                        ? `<a href="${item.link}" target="_blank" class="ml-2 text-indigo-500 dark:text-indigo-400 opacity-0 group-hover/item:opacity-100 hover:text-indigo-700 dark:hover:text-indigo-300 transition" title="Go to resource">
+                                        <i class="fas fa-external-link-alt text-xs"></i>
+                                    </a>`
+                                        : ""
+                                    }
+                                `;
+                  groupInner.appendChild(itemRow);
+                });
+
+                groupContent.appendChild(groupInner);
+                groupEl.appendChild(groupHeader);
+                groupEl.appendChild(groupContent);
+                colDiv.appendChild(groupEl);
+              });
+
+              grid.appendChild(colDiv);
+            });
+            innerContent.appendChild(grid);
+          } else {
+            const list = document.createElement("div");
+            list.className = "p-4 space-y-2";
+            section.items.forEach((item, idx) => {
+              const itemId = `${section.id}-simple-${idx}`;
+              const isChecked = completedItems.has(itemId);
+              const div = document.createElement("div");
+              div.className = "flex items-center gap-3";
+              div.innerHTML = `
+                            <label class="checkbox-wrapper flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only" ${
+                                  isChecked ? "checked" : ""
+                                } onchange="window.toggleItem('${itemId}')">
+                                <div class="w-4 h-4 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 flex items-center justify-center transition hover:border-indigo-400">
+                                    <svg class="w-2.5 h-2.5 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                            </label>
+                            <span class="text-sm text-gray-600 dark:text-gray-300 ${
+                              isChecked
+                                ? "line-through text-gray-400 dark:text-gray-500"
+                                : ""
+                            }" id="text-${itemId}">${item.name}</span>
+                         `;
+              list.appendChild(div);
+            });
+            innerContent.appendChild(list);
+          }
+
+          content.appendChild(innerContent);
+          sectionEl.appendChild(header);
+          sectionEl.appendChild(content);
+          container.appendChild(sectionEl);
+        });
+      }
+
+      // --- 4. INTERACTIVITY LOGIC ---
+
+      function toggleMainAccordion(index) {
+        const content = document.getElementById(`content-${index}`);
+        const arrow = document.getElementById(`arrow-${index}`);
+
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          arrow.style.transform = "rotate(0deg)";
+        } else {
+          content.classList.add("active");
+          arrow.style.transform = "rotate(180deg)";
+        }
+      }
+
+      function toggleSubAccordion(id) {
+        const content = document.getElementById(`content-${id}`);
+        const arrow = document.getElementById(`arrow-${id}`);
+
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          arrow.style.transform = "rotate(0deg)";
+        } else {
+          content.classList.add("active");
+          arrow.style.transform = "rotate(90deg)";
+        }
+      }
+
+      function toggleItem(id) {
+        if (completedItems.has(id)) {
+          completedItems.delete(id);
+          const el = document.getElementById(`text-${id}`);
+          if (el)
+            el.classList.remove(
+              "line-through",
+              "text-gray-400",
+              "dark:text-gray-500"
+            );
+        } else {
+          completedItems.add(id);
+          const el = document.getElementById(`text-${id}`);
+          if (el)
+            el.classList.add(
+              "line-through",
+              "text-gray-400",
+              "dark:text-gray-500"
+            );
+        }
+        saveProgress();
+      }
+
+      function updateAllProgress() {
+        let totalGlobal = 0;
+        let completedGlobal = 0;
+
+        syllabusData.forEach((section, index) => {
+          let sectionTotal = 0;
+          let sectionCompleted = 0;
+
+          if (section.columns) {
+            section.columns.forEach((col, colIdx) => {
+              col.groups.forEach((group, groupIdx) => {
+                group.items.forEach((item, itemIdx) => {
+                  sectionTotal++;
+                  const id = `${section.id}-${colIdx}-${groupIdx}-${itemIdx}`;
+                  if (completedItems.has(id)) sectionCompleted++;
+                });
+              });
+            });
+          } else if (section.items) {
+            section.items.forEach((item, idx) => {
+              sectionTotal++;
+              if (completedItems.has(`${section.id}-simple-${idx}`))
+                sectionCompleted++;
+            });
+          }
+
+          const secPercent =
+            sectionTotal === 0
+              ? 0
+              : Math.round((sectionCompleted / sectionTotal) * 100);
+
+          const bar = document.querySelector(`.section-bar-${index}`);
+          if (bar) bar.style.width = `${secPercent}%`;
+
+          const text = document.querySelector(`.progress-text-${index}`);
+          if (text)
+            text.textContent = `${sectionCompleted}/${sectionTotal} Done (${secPercent}%)`;
+
+          totalGlobal += sectionTotal;
+          completedGlobal += sectionCompleted;
+        });
+
+        const globalPercent =
+          totalGlobal === 0
+            ? 0
+            : Math.round((completedGlobal / totalGlobal) * 100);
+        document.getElementById(
+          "global-percent"
+        ).textContent = `${globalPercent}%`;
+        document.getElementById(
+          "global-progress-bar"
+        ).style.width = `${globalPercent}%`;
+        document.getElementById(
+          "global-count"
+        ).textContent = `${completedGlobal} / ${totalGlobal} Tasks`;
+      }
+
+      function resetProgress() {
+        if (confirm("Reset all progress? This will update the database.")) {
+          completedItems.clear();
+          saveProgress();
+          renderSyllabus();
+          updateAllProgress();
+        }
+      }
+
+      function toggleTheme() {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.theme = "light";
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.theme = "dark";
+        }
+      }
+
+      // --- EXPORT GLOBAL FUNCTIONS ---
+      window.toggleMainAccordion = toggleMainAccordion;
+      window.toggleSubAccordion = toggleSubAccordion;
+      window.toggleItem = toggleItem;
+      window.resetProgress = resetProgress;
+      window.toggleTheme = toggleTheme;
+
+      // Boot
+      init();
+    </script>
+  </body>
+</html>

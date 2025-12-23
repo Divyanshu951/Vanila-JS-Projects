@@ -48,18 +48,9 @@ function fetchByCity(cityName) {
 }
 
 function fetchWeatherData(url) {
-  const request = new XMLHttpRequest();
-  request.open("GET", url);
-  request.send();
-
-  request.addEventListener("load", function () {
-    if (this.status === 200) {
-      const data = JSON.parse(this.responseText);
-      updateUI(data);
-    } else {
-      alert("City not found or API error!");
-    }
-  });
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => updateUI(data));
 }
 
 function updateUI(data) {
@@ -136,38 +127,7 @@ function updateUI(data) {
             <span>${wind.speed} km/h</span>
           </div>
         </div>
-
-         <!-- tecast Section -->
-        <ul class="forecast-list">
-          <!-- Item 1: Active -->
-          <li class="forecast-item active">
-            <i class="fa-solid fa-sun"></i>
-            <span class="day">Wed</span>
-            <span class="temp">08 °C</span>
-          </li>
-
-          <!-- Item 2 -->
-          <li class="forecast-item">
-            <i class="fa-solid fa-cloud-sun"></i>
-            <span class="day">Thu</span>
-            <span class="temp">07 °C</span>
-          </li>
-
-          <!-- Item 3 -->
-          <li class="forecast-item">
-            <i class="fa-solid fa-cloud-showers-heavy"></i>
-            <span class="day">Fri</span>
-            <span class="temp">08 °C</span>
-          </li>
-
-          <!-- Item 4 -->
-          <li class="forecast-item">
-            <i class="fa-solid fa-sun"></i>
-            <span class="day">Sat</span>
-            <span class="temp">06 °C</span>
-          </li>
-        </ul>
-
+        ${updateForcast()}
         <button class="btn-location" id="change-loc-btn">
           <i class="fa-solid fa-location-dot"></i>
           Change Location
@@ -182,6 +142,39 @@ function updateUI(data) {
     const city = prompt("Enter city name:");
     if (city) fetchByCity(city);
   });
+}
+
+function updateForcast() {
+  const html = ` <!-- tecast Section -->
+        <ul class="forecast-list">
+          <!-- Item 1: Active -->
+          <li class="forecast-item active">
+            <i class="fa-solid fa-cloud"></i>
+            <span class="day">Wed</span>
+            <span class="temp">08 °C</span>
+          </li>
+
+          <!-- Item 2 -->
+          <li class="forecast-item">
+            <i class="fa-solid fa-cloud-sun"></i>
+            <span class="day">Thu</span>
+            <span class="temp">07 °C</span>
+          </li>
+
+          <!-- Item 3 -->
+          <li class="forecast-item">
+            <i class="fa-solid fa-cloud"></i>
+            <span class="day">Fri</span>
+            <span class="temp">08 °C</span>
+          </li>
+
+          <!-- Item 4 -->
+          <li class="forecast-item">
+            <i class="fa-solid fa-cloud"></i>
+            <span class="day">Sat</span>
+            <span class="temp">06 °C</span>
+          </li>
+        </ul>`;
 }
 
 // Start the app

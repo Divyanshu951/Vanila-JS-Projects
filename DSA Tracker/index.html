@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Syllabus Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              // Deep Dark Mode Palette
+              dark: {
+                bg: "#1A1A1D" /* Almost pure black */,
+                card: "#0a0a0a" /* Very deep gray */,
+                border: "#1f1f1f" /* Subtle borders */,
+                text: "#e5e5e5",
+                muted: "#a3a3a3",
+                hover: "#141414",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/jpeg"
+      href="https://professor.global/assets/dsa-icon-C_k_sH1x.png"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Custom Checkbox */
+      .checkbox-wrapper input:checked + div {
+        background-color: #10b981;
+        border-color: #10b981;
+      }
+      .checkbox-wrapper input:checked + div svg {
+        display: block;
+      }
+
+      /* Accordion Transitions */
+      .accordion-content {
+        transition: grid-template-rows 0.3s ease-out;
+        display: grid;
+        grid-template-rows: 0fr;
+        overflow: hidden;
+      }
+      .accordion-content.active {
+        grid-template-rows: 1fr;
+      }
+      .accordion-inner {
+        min-height: 0;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    </style>
+    <script>
+      // Initialize Theme
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+  </head>
+  <body
+    class="bg-gray-50 dark:bg-dark-bg text-gray-800 dark:text-dark-text min-h-screen flex flex-col"
+  >
+    <header
+      class="bg-white dark:bg-dark-card shadow-sm border-b dark:border-dark-border sticky top-0 z-50"
+    >
+      <div class="max-w-6xl mx-auto px-4 py-4">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+          <div class="flex items-center justify-between w-full md:w-auto">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">
+                DSA
+                <span class="text-indigo-600 dark:text-indigo-500">Map</span>
+                <span
+                  id="last-updated"
+                  class="fixed top-2 right-2 md:top-auto md:right-auto md:bottom-2 md:left-2 text-xs font-mono text-[#04913e]"
+                ></span>
+              </h1>
+              <div class="flex items-center gap-2">
+                <span
+                  id="db-status"
+                  class="text-xs px-2 py-0.5 rounded-full border dark:border-gray-800 bg-gray-100 dark:bg-gray-900 text-gray-500"
+                  >Connecting...</span
+                >
+                <a
+                  href="https://whimsical.com/dsa-syllabus-codeandebug-2ERY7B6qco2zg5LdawHsLE"
+                  target="_blank"
+                  ><img
+                    src="https://luna1.co/7c9d33.png"
+                    class="flex h-4 inline-block"
+                  />
+                </a>
+              </div>
+            </div>
+            <button
+              onclick="window.toggleTheme()"
+              class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+            >
+              <i class="fas fa-moon dark:hidden"></i>
+              <i class="fas fa-sun hidden dark:inline text-yellow-400"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-4 w-full md:w-auto">
+            <button
+              onclick="window.resetProgress()"
+              class="text-xs font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 px-3 py-2 rounded transition border border-transparent hover:border-red-200 dark:hover:border-red-900/30 opacity-30"
+            >
+              <i class="fas fa-undo"></i>
+            </button>
+
+            <button
+              onclick="window.toggleTheme()"
+              class="hidden md:flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            >
+              <i class="fas fa-moon dark:hidden"></i>
+              <i class="fas fa-sun hidden dark:inline text-yellow-400"></i>
+            </button>
+
+            <!-- ADD flex-1 md:flex-none HERE -->
+            <div
+              class="flex-1 md:flex-none flex justify-between bg-gray-100 dark:bg-[#151515] rounded-lg dark:text-gray-400 mb-1"
+            >
+              <div class="p-3 w-full md:w-64 dark:border-dark-border">
+                <div
+                  class="flex justify-between text-xs font-semibold text-gray-500"
+                >
+                  <span>Total Journey</span>
+                  <span id="global-percent">0%</span>
+                </div>
+
+                <div
+                  class="w-full bg-gray-300 dark:bg-gray-800 rounded-full h-2"
+                >
+                  <div
+                    id="global-progress-bar"
+                    class="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-500"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+
+              <div
+                id="progress-stats"
+                class="flex items-center justify-start py-3 pr-3 pl-0 text-xs text-gray-900 dark:text-gray-400 font-semibold"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+      <div id="dashboard-view" class="fade-in">
+        <div
+          id="dashboard-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
+          <div class="text-gray-400">Loading Dashboard...</div>
+        </div>
+      </div>
+
+      <div id="level-detail-view" class="hidden fade-in">
+        <div class="mb-6">
+          <button
+            onclick="window.closeLevel()"
+            class="mb-4 text-sm font-medium text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 flex items-center gap-2 transition-colors"
+          >
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </button>
+
+          <div
+            class="bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border p-6 rounded-xl shadow-sm"
+          >
+            <div
+              class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+            >
+              <div>
+                <h2
+                  id="detail-title"
+                  class="text-2xl font-bold text-gray-900 dark:text-white"
+                >
+                  Level Title
+                </h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Focus on completing all sub-topics.
+                </p>
+              </div>
+              <div class="w-full md:w-1/3">
+                <div
+                  class="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400"
+                >
+                  <span>Level Progress</span>
+                  <span id="detail-percent">0%</span>
+                </div>
+                <div
+                  class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-3"
+                >
+                  <div
+                    id="detail-progress-bar"
+                    class="bg-green-500 h-3 rounded-full transition-all duration-500"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <div
+                  id="detail-count"
+                  class="text-xs text-right mt-1 text-gray-400"
+                >
+                  0/0
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="level-content-container" class="space-y-4"></div>
+      </div>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        get,
+        update,
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAx_cwOhFJibeaqXmh9NPJZf9x6R7LzTF0",
+        authDomain: "dsatracker951.firebaseapp.com",
+        projectId: "dsatracker951",
+        storageBucket: "dsatracker951.firebasestorage.app",
+        messagingSenderId: "724452945514",
+        appId: "1:724452945514:web:e6e6e1a04dab66678ae413",
+        measurementId: "G-GMJ1S2R008",
+        databaseURL:
+          "https://dsatracker951-default-rtdb.europe-west1.firebasedatabase.app",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const dbRef = ref(db, "DSATracker/data");
+
+      // --- STATE ---
+      let completedItems = new Set();
+      let currentActiveLevelIndex = null;
+
+      // --- INITIALIZATION ---
+      function init() {
+        renderDashboard();
+        loadProgress();
+      }
+
+      // --- FIREBASE LOGIC ---
+      function loadProgress() {
+        const statusEl = document.getElementById("db-status");
+        statusEl.textContent = "Syncing...";
+        statusEl.className =
+          "text-xs px-2 py-0.5 rounded-full border bg-gray-100 dark:bg-gray-800 text-gray-500 border-gray-300 dark:border-gray-700";
+
+        get(dbRef)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              const items = data.completed || [];
+              completedItems = new Set(items);
+              statusEl.textContent = `Online`;
+
+              document.getElementById(
+                "last-updated"
+              ).textContent = `Last Updated: ${new Date(
+                data.lastUpdated
+              ).toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}`;
+
+              statusEl.className =
+                "text-xs px-2 py-0.5 rounded-full border bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800";
+            } else {
+              statusEl.textContent = "Connected (New)";
+              statusEl.className =
+                "text-xs px-2 py-0.5 rounded-full border bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800";
+            }
+            // Refresh UI with data
+            if (currentActiveLevelIndex !== null) {
+              renderLevel(currentActiveLevelIndex);
+            } else {
+              renderDashboard();
+            }
+            updateAllProgress();
+          })
+          .catch((error) => {
+            console.error("Firebase Error:", error);
+            statusEl.textContent = "Offline";
+            statusEl.className =
+              "text-xs px-2 py-0.5 rounded-full border bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800";
+          });
+      }
+
+      function saveProgress() {
+        const statusEl = document.getElementById("db-status");
+        statusEl.textContent = "Saving...";
+
+        const dataToSave = {
+          completed: [...completedItems],
+          lastUpdated: new Date().toISOString(),
+        };
+
+        update(dbRef, dataToSave)
+          .then(() => {
+            statusEl.textContent = "Saved";
+            setTimeout(() => {
+              // Restore online status style
+              statusEl.textContent = "Online";
+            }, 1000);
+
+            updateLastUpdated();
+          })
+          .catch((error) => {
+            console.error("Save failed:", error);
+            statusEl.textContent = "Error Saving";
+          });
+
+        updateAllProgress();
+      }
+
+      function updateLastUpdated() {
+        get(dbRef)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const data2 = snapshot.val();
+              document.getElementById(
+                "last-updated"
+              ).textContent = `Last Updated: ${new Date(
+                data2.lastUpdated
+              ).toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}`;
+            }
+          })
+          .catch((error) => {
+            console.error("Firebase Error:", error);
+          });
+      }
+
+      // --- CALCULATIONS ---
+      function getSectionStats(sectionIndex) {
+        const section = syllabusData[sectionIndex];
+        let total = 0;
+        let completed = 0;
+
+        if (section.columns) {
+          section.columns.forEach((col, colIdx) => {
+            col.groups.forEach((group, groupIdx) => {
+              group.items.forEach((item, itemIdx) => {
+                total++;
+                const id = `${section.id}-${colIdx}-${groupIdx}-${itemIdx}`;
+                if (completedItems.has(id)) completed++;
+              });
+            });
+          });
+        }
+        return {
+          total,
+          completed,
+          percent: total === 0 ? 0 : Math.round((completed / total) * 100),
+        };
+      }
+
+      function updateAllProgress() {
+        let totalGlobal = 0;
+        let completedGlobal = 0;
+
+        // Recalculate everything from data
+        syllabusData.forEach((section, idx) => {
+          const stats = getSectionStats(idx);
+          totalGlobal += stats.total;
+          completedGlobal += stats.completed;
+
+          // Update Dashboard Cards if visible
+          const cardBar = document.getElementById(`dash-bar-${idx}`);
+          const cardText = document.getElementById(`dash-text-${idx}`);
+          if (cardBar) cardBar.style.width = `${stats.percent}%`;
+          if (cardText)
+            cardText.textContent = `${stats.completed}/${stats.total} Done`;
+
+          // Update Detail View if visible and matches current index
+          if (currentActiveLevelIndex === idx) {
+            const detailBar = document.getElementById("detail-progress-bar");
+            const detailPercent = document.getElementById("detail-percent");
+            const detailCount = document.getElementById("detail-count");
+            if (detailBar) detailBar.style.width = `${stats.percent}%`;
+            if (detailPercent) detailPercent.textContent = `${stats.percent}%`;
+            if (detailCount)
+              detailCount.textContent = `${stats.completed}/${stats.total} Tasks`;
+          }
+        });
+
+        // Global Bar
+        const globalPercent =
+          totalGlobal === 0
+            ? 0
+            : Math.round((completedGlobal / totalGlobal) * 100);
+        document.getElementById(
+          "global-percent"
+        ).textContent = `${globalPercent}%`;
+        document.getElementById(
+          "global-progress-bar"
+        ).style.width = `${globalPercent}%`;
+        document.getElementById(
+          "progress-stats"
+        ).textContent = `${completedGlobal} / ${totalGlobal}`;
+      }
+
+      // --- RENDER DASHBOARD (GRID) ---
+      function renderDashboard() {
+        const grid = document.getElementById("dashboard-grid");
+        grid.innerHTML = "";
+
+        syllabusData.forEach((section, index) => {
+          const stats = getSectionStats(index);
+
+          const card = document.createElement("div");
+          card.className =
+            "bg-white dark:bg-dark-card rounded-xl p-5 shadow-sm border border-gray-100 dark:border-dark-border cursor-pointer hover:shadow-md dark:hover:bg-[#111] transition-all group relative overflow-hidden";
+          card.onclick = () => window.openLevel(index);
+
+          card.innerHTML = `
+                  <div class="flex items-start justify-between mb-4">
+                      <div class="p-3 rounded-lg bg-gray-50 dark:bg-[#151515] ${
+                        section.color
+                      } group-hover:scale-110 transition-transform duration-300">
+                          <i class="fas ${section.icon} text-xl"></i>
+                      </div>
+                      <span class="text-xs font-mono ${
+                        section.completed
+                          ? `text-[#04913e]
+`
+                          : `text-gray-400`
+                      }">#${index + 1}</span>
+                  </div>
+                  <h3 class="font-bold text-lg text-gray-800 dark:text-gray-200 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">${
+                    section.title
+                  }</h3>
+                  <div class="mt-4">
+                      <div class="flex justify-between text-xs text-gray-500 dark:text-gray-500 mb-1">
+                          <span>Progress</span>
+                          <span id="dash-text-${index}">${stats.completed}/${
+            stats.total
+          } Done</span>
+                      </div>
+                      <div class="w-full bg-gray-100 dark:bg-[#1a1a1a] rounded-full h-1.5">
+                          <div id="dash-bar-${index}" class="bg-indigo-500 dark:bg-indigo-600 h-1.5 rounded-full transition-all duration-500" style="width: ${
+            stats.percent
+          }%"></div>
+                      </div>
+                  </div>
+              `;
+          grid.appendChild(card);
+        });
+      }
+
+      // --- RENDER LEVEL DETAIL ---
+      function renderLevel(index) {
+        currentActiveLevelIndex = index;
+        const section = syllabusData[index];
+        const container = document.getElementById("level-content-container");
+        container.innerHTML = "";
+
+        // Update Header Info
+        document.getElementById("detail-title").textContent = section.title;
+        // Trigger progress update for header
+        updateAllProgress();
+
+        // Render Accordions for this section
+        if (section.columns) {
+          const grid = document.createElement("div");
+          grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-6";
+
+          section.columns.forEach((col, colIdx) => {
+            const colDiv = document.createElement("div");
+            colDiv.className = "flex flex-col gap-4";
+
+            // Column Header
+            colDiv.innerHTML = `
+                   <div class="flex items-center gap-3 mb-2 pb-2 border-b border-gray-200 dark:border-dark-border">
+                      <div class="${col.bgColor} ${col.color} p-2 rounded-md">
+                          <i class="fas ${col.icon}"></i>
+                      </div>
+                      <h3 class="font-bold text-gray-700 dark:text-gray-200">${col.title}</h3>
+                   </div>
+                `;
+
+            col.groups.forEach((group, groupIdx) => {
+              const uniqueGroupId = `${section.id}-${colIdx}-${groupIdx}`;
+
+              const groupEl = document.createElement("div");
+              groupEl.className =
+                "bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg overflow-hidden shadow-sm";
+
+              // Group Header
+              const header = document.createElement("div");
+              header.className =
+                "p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-[#111] transition select-none";
+              header.onclick = () => window.toggleAccordion(uniqueGroupId);
+
+              header.innerHTML = `
+                      <div class="flex items-center gap-2">
+                          <span class="font-medium text-sm text-gray-800 dark:text-gray-200 ${group.badge}">${group.name}</span>
+                      </div>
+                      <i class="fas fa-chevron-right text-xs text-gray-400 transition-transform duration-200" id="arrow-${uniqueGroupId}"></i>
+                   `;
+
+              // Group Content
+              const content = document.createElement("div");
+              content.id = `content-${uniqueGroupId}`;
+              content.className =
+                "accordion-content bg-gray-100 dark:bg-[#151515]";
+
+              const inner = document.createElement("div");
+              inner.className = "accordion-inner p-2 space-y-1";
+
+              group.items.forEach((item, itemIdx) => {
+                const itemId = `${uniqueGroupId}-${itemIdx}`;
+                const isChecked = completedItems.has(itemId);
+
+                const row = document.createElement("div");
+                row.className =
+                  "flex items-start p-2 hover:bg-white dark:hover:bg-[#151515] rounded transition group/item";
+
+                row.innerHTML = `
+                          <label class="checkbox-wrapper flex items-start cursor-pointer pt-0.5">
+                              <input type="checkbox" class="sr-only" onchange="window.toggleItem('${itemId}')" ${
+                  isChecked ? "checked" : ""
+                }>
+                              <div class="w-4 h-4 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#151515] flex items-center justify-center transition hover:border-indigo-400 dark:hover:border-indigo-400">
+                                  <svg class="w-2.5 h-2.5 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                              </div>
+                          </label>
+                          <div class="ml-3 flex-grow min-w-0">
+                               <div class="text-sm text-gray-700 dark:text-gray-300 ${
+                                 isChecked
+                                   ? "line-through text-gray-400 dark:text-gray-600"
+                                   : ""
+                               }" id="text-${itemId}">
+                               ${
+                                 item.link && item.link !== "#"
+                                   ? `<a href="${item.link}" target="_blank">${item.name}</a>`
+                                   : item.name
+                               }
+
+                               </div>
+                          </div>
+                          ${
+                            item.link
+                              ? item.link === "#"
+                                ? `<p class="ml-2 opacity-50"><i class="fas fa-external-link-alt text-red-500 text-xs"></i></p>`
+                                : `<a href="${item.link}" target="_blank" class="ml-2 text-indigo-500 dark:text-indigo-400 opacity-50"><i class="fas fa-external-link-alt text-xs"></i></a>`
+                              : `<p class="ml-2 text-indigo-500 dark:text-indigo-400 opacity-50"><i class="fas fa-ban text-red-500"></i></p>`
+                          }
+                      `;
+                inner.appendChild(row);
+              });
+
+              content.appendChild(inner);
+              groupEl.appendChild(header);
+              groupEl.appendChild(content);
+              colDiv.appendChild(groupEl);
+            });
+            grid.appendChild(colDiv);
+          });
+          container.appendChild(grid);
+        }
+      }
+
+      // --- GLOBAL FUNCTIONS ---
+
+      window.openLevel = function (index) {
+        document.getElementById("dashboard-view").classList.add("hidden");
+        document.getElementById("level-detail-view").classList.remove("hidden");
+        renderLevel(index);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      window.closeLevel = function () {
+        currentActiveLevelIndex = null;
+        document.getElementById("level-detail-view").classList.add("hidden");
+        document.getElementById("dashboard-view").classList.remove("hidden");
+        // Re-render dashboard to update progress bars on cards
+        renderDashboard();
+      };
+
+      window.toggleAccordion = function (id) {
+        const content = document.getElementById(`content-${id}`);
+        const arrow = document.getElementById(`arrow-${id}`);
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          arrow.style.transform = "rotate(0deg)";
+        } else {
+          content.classList.add("active");
+          arrow.style.transform = "rotate(90deg)";
+        }
+      };
+
+      window.toggleItem = function (id) {
+        if (completedItems.has(id)) {
+          completedItems.delete(id);
+          const el = document.getElementById(`text-${id}`);
+          if (el)
+            el.classList.remove(
+              "line-through",
+              "text-gray-400",
+              "dark:text-gray-600"
+            );
+        } else {
+          completedItems.add(id);
+          const el = document.getElementById(`text-${id}`);
+          if (el)
+            el.classList.add(
+              "line-through",
+              "text-gray-400",
+              "dark:text-gray-600"
+            );
+        }
+        saveProgress();
+      };
+
+      window.resetProgress = function () {
+        if (confirm("Reset entire progress?")) {
+          completedItems.clear();
+          saveProgress();
+          if (currentActiveLevelIndex !== null)
+            renderLevel(currentActiveLevelIndex);
+          renderDashboard();
+        }
+      };
+
+      window.toggleTheme = function () {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.theme = "light";
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.theme = "dark";
+        }
+      };
+
+      // Start
+      init();
+    </script>
+    <script src="data.js"></script>
+  </body>
+</html>
