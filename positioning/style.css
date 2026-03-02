@@ -1,0 +1,214 @@
+body {
+  font-family: "Mukta", sans-serif;
+  text-align: center; /* centers inline elements like buttons/text */
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  width: 100%;
+  max-width: 800px;
+  margin: 50px auto; /* centers the whole page horizontally */
+}
+
+.content {
+  padding: 20px;
+  text-align: left; /* so paragraphs aren't centered */
+}
+
+.content p {
+  padding: 10px;
+  border-left: 2px solid #e95400;
+}
+
+.btn-section {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.btn-section button {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-right: 10px;
+}
+
+code {
+  color: #e95400;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.codebox {
+  background-color: rgba(0, 0, 0, 0.8);
+  max-width: fit-content;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+  display: block;
+  padding: 14px;
+  margin-top: 20px;
+}
+
+.codebox code {
+  display: inline-block;
+  margin-bottom: 3px;
+}
+
+.codebox .cmt {
+  color: gray;
+}
+
+.box {
+  margin: 30px auto;
+  border: 3px solid black;
+  border-radius: 8px;
+  height: 400px;
+  width: 700px;
+  background: linear-gradient(
+    to bottom right,
+    rgb(169, 223, 223),
+    rgb(222, 222, 158),
+    rgb(223, 153, 223)
+  );
+  position: relative;
+}
+
+.another-box {
+  border: 3px solid red;
+  border-radius: 8px;
+  height: 200px;
+  width: 200px;
+  position: absolute;
+}
+
+.fixed-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid black;
+  border-radius: 8px;
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: yellow;
+}
+
+.transition-hover {
+  background-color: magenta;
+  height: 100px;
+  width: 100px;
+  border: 2px solid black;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 3s, width 3s, height 3s;
+}
+.btn {
+  cursor: pointer;
+  border: 2px solid black;
+  padding: 15px 30px;
+  border-radius: 4px;
+  font-size: 18px;
+  position: relative;
+  background-color: aqua;
+}
+
+.transition-hover:hover {
+  font-size: 32px;
+  background-color: red;
+  width: 200px;
+  height: 200px;
+}
+
+.transition-timing ul {
+  list-style-type: none;
+}
+
+.transition-timing ul li {
+  padding: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  height: 20px;
+  width: 200px;
+  background-color: magenta;
+  color: #fff;
+}
+
+.transition-timing ul li:hover {
+  width: 700px;
+  content: "unparsed text";
+}
+
+.box-translate {
+  border-radius: 4px;
+  border: 2px solid black;
+  width: 100px;
+  height: 100px;
+  background-color: orangered;
+}
+
+/* --- Origin Section --- */
+.origin-stage {
+  height: 200px;
+  position: relative;
+  border: 1px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.origin-box {
+  width: 120px;
+  height: 120px;
+  background: #e0e7ff;
+  border: 2px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--primary);
+  cursor: pointer;
+  position: relative;
+  /* Constant rotation to show the effect */
+  animation: gentleSwing 3s infinite alternate ease-in-out;
+  transition: transform-origin 0.5s;
+}
+
+.pivot-dot {
+  width: 12px;
+  height: 12px;
+  background: red;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 10;
+  transition: all 0.5s;
+}
+
+.pivot-dot.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.pivot-dot.top-left {
+  top: -6px;
+  left: -6px;
+  transform: translate(0, 0);
+}
+
+@keyframes gentleSwing {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
+}

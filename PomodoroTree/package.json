@@ -2,9 +2,8 @@
   "scripts": {
     "start": "live-server .",
     "prettier": "prettier --write \"src/**/*.{html,js,css}\""
-
   },
   "dependencies": {
-    "live-server": "^1.2.1"
+    "live-server": "^1.2.0"
   }
 }

@@ -1,192 +1,427 @@
-<!DOCTYPE html>
+<!-- Without responsiveness  -->
+
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog Post</title>
-    <link rel="stylesheet" href="styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Mukta:wght@200;300;400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
+    <title>Stock Check</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+
+      .nav-sidebar {
+        position: fixed;
+        top: 100px;
+        left: 25px;
+        border-left: 3px solid gray;
+      }
+
+      .nav-sidebar ul {
+        list-style-type: none;
+      }
+
+      .card {
+        margin-top: 15px;
+        position: relative;
+      }
+
+      .link {
+        position: absolute;
+        bottom: 10px;
+        right: 40px;
+      }
+
+      .link-initial {
+        position: absolute;
+        bottom: 10px;
+        right: 40px;
+      }
+
+      .l2 {
+        bottom: -160px;
+        right: 235px;
+      }
+
+      .l1 {
+        bottom: -160px;
+        right: 140px;
+      }
+
+      .link a {
+        color: #000;
+        text-decoration: none;
+      }
+
+      .link a:hover {
+        text-decoration: underline;
+      }
+
+      .zoom {
+        position: fixed;
+        top: 155px;
+        left: 540px;
+        transform: scale(2);
+      }
+
+      .card-flex {
+        margin: 10px 10px;
+        display: flex;
+        gap: 20px;
+
+        position: fixed;
+        bottom: 0;
+        left: 0;
+
+        width: 100vw;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        /* Hide scrollbar */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE & Edge */
+      }
+
+      .card-flex::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+      }
+
+      .note-not-active {
+        width: 300px;
+        background-color: #fff475;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        box-shadow:
+          0 1px 2px 0 rgba(60, 64, 67, 0.3),
+          0 2px 6px 2px rgba(60, 64, 67, 0.15);
+        font-family: "Roboto", Arial, sans-serif;
+        color: #202124;
+        padding: 16px;
+        position: absolute;
+
+        z-index: 111;
+        position: absolute;
+        top: 5px;
+        left: 100px;
+        opacity: 0.7;
+        height: 70px;
+        cursor: pointer;
+      }
+
+      .card-flex .note:hover {
+        opacity: 1;
+      }
+
+      .note {
+        width: 300px;
+        height: 200px;
+        background-color: #fff475;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        box-shadow:
+          0 1px 2px 0 rgba(60, 64, 67, 0.3),
+          0 2px 6px 2px rgba(60, 64, 67, 0.15);
+        font-family: "Roboto", Arial, sans-serif;
+        color: #202124;
+        padding: 16px;
+        position: absolute;
+        top: 10px;
+        right: -320px;
+      }
+
+      .nav-sidebar a {
+        color: #fff;
+        display: block;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: 0.2s;
+        border-left: 3px solid transparent;
+        margin-left: -3px;
+      }
+
+      .nav-sidebar a:hover,
+      .nav-sidebar a.active {
+        color: #d946ef;
+        border-left-color: #d946ef;
+        font-weight: 600;
+        background: #f7f7f7;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #password-gate {
+        position: fixed;
+        inset: 0;
+        background: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      .gate-box {
+        background: #020617;
+        padding: 24px;
+        border-radius: 8px;
+        width: 280px;
+        text-align: center;
+      }
+
+      .gate-box input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 12px;
+      }
+
+      .gate-box button {
+        width: 100%;
+        margin-top: 12px;
+        padding: 8px;
+      }
+
+      #error-msg {
+        color: red;
+        margin-top: 8px;
+        font-size: 14px;
+      }
+    </style>
   </head>
   <body>
-    <div class="hero">
-      <h1>A blog Post</h1>
-      <p>
-        Typography is one of the most important elements of front end design and
-        development! In this exercise, we'll play around with some of the common
-        CSS properties to manage and style our fonts by making a nice blog
-        post-like web page.
-      </p>
-      <hr />
+    <div id="password-gate">
+      <div class="gate-box">
+        <input type="password" id="password-input" />
+        <button id="submit-password">Unlock</button>
+        <p id="error-msg"></p>
+      </div>
     </div>
 
-    <div class="content">
-      <p class="info">12.31.2050 | <span>ALL ABOUT CSS BLOG</span></p>
-      <h2>All About Typography</h2>
-      <p class="headline">
-        Headlines, like this one, are great ways to quickly capture the reader's
-        attention, to give them a sumary, intro, or other important information
-        in a web page. You can use <code>text-transform: uppercase;</code> to
-        make a whole body of text uppercase using CSS if you really need to grab
-        attention!
-      </p>
+    <main>
+      <div class="nav-sidebar">
+        <ul>
+          <!-- <li><a href="#angle-one">AngleOne </a></li> -->
+        </ul>
+      </div>
+      <div class="main-container"></div>
+    </main>
 
-      <p>
-        Okay, now that we're done screaming in the headline in all caps (which
-        you should do sparingly) - it's time to chat more about other components
-        of typography. You'll notice that we chose a nice serif font for our
-        headings, and a nice sans-serif font for our body text. This is
-        intentional! Serif font faces are generally considered pretty
-        inaccessible as a body text style, since at smaller sizes it's much more
-        difficult to visually differentiate the characters from one another. At
-        large font sizes, such as those seen in most headings, serif fonts are
-        considered fine, since the larger style makes it easier to see where
-        serif characters start and where they end.
-      </p>
+    <!-- Data -->
+    <script>
+      const mainContainer = document.querySelector(".main-container");
+      const sideBar = document.querySelector(".nav-sidebar ul");
 
-      <p>
-        But wait! What if you want more than just normal text on your page?
-        Another common thing you might see in web pages are quotes. To make
-        quotes, we can use the blockquote element and style it accordingly, so
-        it stands out a bit as a non-body text quote.
-      </p>
+      const data = [
+        {
+          tickerName: "Angel One Ltd",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22ANGELONE%22%7D%5D",
+          Notes: "AVG: 2522.68",
+          id: "angelone",
+          linkName: "ANGELONE",
+        },
+        {
+          tickerName: "KPIT Technologies Ltd",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22KPITTECH%22%7D%5D",
+          Notes: "AVG: 1195.95",
+          id: "kpittech",
+          linkName: "KPITTECH",
+        },
+        {
+          tickerName: "MapmyIndia",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22MAPMYINDIA%22%7D%5D",
+          Notes: "AVG: 1611.79",
+          id: "mapmyindia",
+          linkName: "MapmyIndia",
+        },
+        {
+          tickerName: "Data Patterns",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22DATAPATTNS%22%7D%5D",
+          Notes: "AVG: 2454.44",
+          id: "datapattns",
+          linkName: "DATAPATTNS",
+        },
+        {
+          tickerName: "Nazara Technologies",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22NAZARA%22%7D%5D",
+          Notes: "AVG: 253.24",
+          id: "nazara",
+          linkName: "Nazara",
+        },
+        {
+          tickerName: "IREDA",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22IREDA%22%7D%5D",
+          Notes: "AVG: 143.71",
+          id: "ireda",
+          linkName: "IREDA",
+        },
+        {
+          tickerName: "Inox Wind",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22INOXWIND%22%7D%5D",
+          Notes: "AVG: 126.92",
+          id: "inoxwind",
+          linkName: "InoxWind",
+        },
+        {
+          tickerName: "Praj Industries",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22PRAJIND%22%7D%5D",
+          Notes: "AVG: 365.4",
+          id: "prajind",
+          linkName: "PrajInd",
+        },
+        {
+          tickerName: "Genesys International",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22GENESYS%22%7D%5D",
+          Notes: "AVG: 427.39",
+          id: "genesys",
+          linkName: "genesys",
+        },
+        {
+          tickerName: "Titagarh Rail Systems",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22TITAGARH%22%7D%5D",
+          Notes: "AVG: 831.24",
+          id: "titagarh",
+          linkName: "titagarh",
+        },
+        {
+          tickerName: "Zen Technologies",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22ZENTEC%22%7D%5D",
+          Notes: "AVG: 1353.29",
+          id: "zentec",
+          linkName: "ZenTec",
+        },
+        {
+          tickerName: "Paras Defence",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22PARAS%22%7D%5D",
+          Notes: "AVG: 693.04",
+          id: "paras",
+        },
+        {
+          tickerName: "Happiest Minds",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22HAPPSTMNDS%22%7D%5D",
+          Notes: "AVG: 516.17",
+          id: "happstmnds",
+        },
+        {
+          tickerName: "Jupiter Wagons",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22JWL%22%7D%5D",
+          Notes: "AVG: 303.45",
+          id: "jwl",
+        },
+        {
+          tickerName: "Tata Consultancy Services",
+          link: "%5B%7B%22type%22%3A%22buy%22%2C%22quantity%22%3A10%2C%22ticker%22%3A%22TCS%22%7D%5D",
+          Notes: "AVG: 3105.42 / Sell: 4000",
+          id: "tcs",
+        },
+      ];
 
-      <blockquote class="quote">
-        "This is a quote - you probably knew that at a glance since we gave it
-        some nice styling. Pretty nice, huh? A great lesson in User Experience
-        Design, where we take special care to implement our web page in a way
-        that makes it pleasant and intuitive for our users/readers.
-        Differentiating our different typography components visually makes
-        information much more organized and easier to digest for our users."
-        <cite>– A wise person</cite>
-      </blockquote>
+      const width = window.innerWidth;
 
-      <hr />
+      data.forEach((ticker) => {
+        const html = `
+        <div class="card" id=${ticker.id}>
+          <p
+            class="sc-embed"
+            data-width="500px"
+            data-orders="${ticker.link}"
+            data-cardsize="${width < 400 ? "small" : "big"}"
+            data-withtt="true"
+            data-withsearch="true"
+            style="
+              width: 500px;
+              min-height: 300px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <strong>loading widget to trade ${ticker.tickerName}</strong>
+          </p>
+          <p class="link l1" style="${width < 400 ? "z-index: 10; top: 10px;" : ""}"><a href="https://www.screener.in/company/${ticker.linkName}/consolidated/" target="_blank">SCANNER</a></p>
+          <p class="link l2" style="${width < 400 ? "z-index: 10; top: 10px;" : ""}"><a href="https://in.tradingview.com/symbols/NSE-${ticker.linkName}" target="_blank">TradingView</a></p>
+          <div class="note" style="${width < 400 ? "width: 115px; right: 0; height: 350px;" : ""}">${ticker.Notes}</div>
+        </div>
+        `;
 
-      <h3>a new section</h3>
+        const navHtml = `<li><a class="nav-child" href="#${ticker.id}">${ticker.tickerName.split("-").at(0)}</a></li>`;
 
-      <p>
-        And just like that, we've got a new section of content separated by a
-        <code>hr</code>
-        element (a 'horizontal rule' or a divider) and a new heading. Isn't
-        putting content together fun?
-      </p>
+        mainContainer.insertAdjacentHTML("beforeend", html);
+        if (width < 400) {
+          sideBar.style.display = "none";
+        }
 
-      <p>
-        Notice as well that when we entered in the <code>H3</code> content, it
-        was all lowercase, but now it's in a nice Title Case, where the first
-        letter of each word is capitalized. We did that with CSS! Using
-        <code>text-transform: capitalize;</code> we can implement title cased
-        content.
-      </p>
+        sideBar.insertAdjacentHTML("beforeend", navHtml);
+      });
 
-      <h4>Heading 4</h4>
+      document
+        .querySelector(".nav-sidebar")
+        .addEventListener("click", function (e) {
+          if (e.target.className !== "nav-child") return;
 
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
-        est dapibus, viverra metus ac, fermentum libero. Integer lobortis enim
-        ac arcu malesuada ultrices. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </p>
+          document
+            .querySelectorAll(".nav-sidebar li a")
+            .forEach((ele) => ele.classList.remove("active"));
 
-      <h5>Heading 5</h5>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
-        est dapibus, viverra metus ac, fermentum libero. Integer lobortis enim
-        ac arcu malesuada ultrices. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </p>
+          const focusClass = e.target.attributes.href.value.slice(1);
+          e.target.classList.add("active");
 
-      <h6>Heading 6</h6>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
-        est dapibus, viverra metus ac, fermentum libero. Integer lobortis enim
-        ac arcu malesuada ultrices. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </p>
+          const allCards = document.querySelectorAll(".card");
+          [...allCards].forEach((card) => {
+            if (focusClass === card.id) card.classList.add("zoom");
+            else card.classList.remove("zoom");
 
-      <hr />
+            const cardsArray = [...card.children];
+            cardsArray.forEach((child) => {
+              child.classList.remove("note-not-active");
+              child.style.height = "200px";
 
-      <h3>Common Font Sizing Approaches</h3>
+              if (child.className === "note" && focusClass !== card.id) {
+                child.classList.add("note-not-active");
+                child.style.height = "65px";
+              }
+            });
 
-      <h4><code>px</code> (pixels)</h4>
-      <p>
-        Pixels are the simplest way to hard code your font size. By default the
-        browser sets the root font size to <code>16px</code>, but you can change
-        the font size in the <code>body</code> element or any other HTML element
-        by setting <code>font-size</code> to any number of <code>px</code>.
-      </p>
+            mainContainer.classList.add("card-flex");
+          });
+        });
+    </script>
 
-      <h4><code>em</code></h4>
-      <p>
-        <code>em</code> units size font relative to the parent element. For
-        example, if the <code>body</code> element is <code>16px</code>, and a
-        nested <code>div</code> element's font size is set to
-        <code>1.5em</code>, the browser will multiply 16px x 1.5, resulting in
-        <code>24px</code> font in the div.
-      </p>
+    <script>
+      const CORRECT_PASSWORD = "91829";
 
-      <h4><code>rem</code> (root em)</h4>
-      <p>
-        Root <code>em</code> units are similar to <code>em</code>, but they are
-        relative to the root font size instead of the parent element of whatever
-        is being styled. For example, if the root font size (the font size of
-        the <code>body</code> element) is set to 16px, and we have a
-        <code>p</code> element nested many layers down with a font-size set to
-        <code>2rem</code>, that paragraph will have 32px font. If the body font
-        size ever changes, this paragraph will also change accordingly.
-      </p>
+      const gate = document.getElementById("password-gate");
+      const input = document.getElementById("password-input");
+      const btn = document.getElementById("submit-password");
+      const error = document.getElementById("error-msg");
 
-      <h4>Which one do I use?</h4>
-      <p>
-        Great question! Generally, people try to stick to using em or rem over
-        px, since they make responsive typography that scales up and down across
-        different device widths much easier. Using px for your font sizes is not
-        as dynamic, and you may find that writing media queries to update all
-        the various element font sizes in pixels at different screen widths is
-        not the most scalable approach to typography.
-      </p>
-
-      <p>
-        Between em and rem, rem has a nice advantage of all elements being
-        relative to one single root font value, where nested elements with
-        parent/child font size dependencies can still be hard to manage with em
-        units. When writing responsive styles, rem allows you to simply update
-        the root font size at different screen sizes and all elements using rem
-        units will adjust themselves accordingly creating a super easy-to-manage
-        typography size system.
-      </p>
-
-      <p>
-        In small projects you may not have an issues hard coding pixelage, but
-        it's always important to understand the drawbacks of writing styles that
-        may not be responsive or dynamic.
-      </p>
-      <!-- <header>
-        <h1>A Blog Post</h1>
-        <p>
-          Typography is one of the most important elements of front end design
-          and development! In this exercise, we'll play around with some of the
-          common CSS properties to manage and style our fonts by making a nice
-          blog post-like web page.
-        </p>
-        <hr />
-      </header> -->
-    </div>
-
-    <!-- Footer -->
-    <footer>
-      <ul>
-        <li><a href="/privacy-policy">Privacy Policy</a></li>
-        <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/contact">Contact Us</a></li>
-        <li><a href="/more-info">More Info</a></li>
-      </ul>
-    </footer>
+      btn.addEventListener("click", () => {
+        if (input.value === CORRECT_PASSWORD) {
+          gate.style.display = "none";
+        } else {
+          error.textContent = "Wrong password";
+          input.value = "";
+        }
+      });
+    </script>
+    <script async src="https://www.gateway-tt.in/assets/embed.js"></script>
   </body>
 </html>

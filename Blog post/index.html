@@ -1,191 +1,401 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog Post</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>All About Typography</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Mukta:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <style>
+      /* --- 1. Variables & Reset --- */
+      :root {
+        --font-heading: "Bitter", serif;
+        --font-body: "Mukta", sans-serif;
+        --color-primary: #222;
+        --color-accent: #d946ef; /* Pinkish-purple for contrast */
+        --color-bg: #fdfdfd;
+        --color-code-bg: #1e1e1e;
+        --spacing-unit: 1rem;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth; /* Enables smooth scrolling to sections */
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+        background-color: var(--color-bg);
+        color: var(--color-primary);
+        line-height: 1.7;
+      }
+
+      /* --- 2. Layout (Grid) --- */
+      .page-container {
+        display: grid;
+        grid-template-columns: 250px 1fr; /* Sidebar | Content */
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 40px;
+        padding: 40px 20px;
+      }
+
+      /* --- 3. Sidebar Tabs (Sticky Navigation) --- */
+      .sidebar {
+        position: sticky;
+        top: 40px;
+        height: fit-content;
+      }
+
+      .nav-tabs {
+        list-style: none;
+        padding: 0;
+        border-left: 2px solid #eee;
+      }
+
+      .nav-tabs li {
+        margin-bottom: 10px;
+      }
+
+      .nav-tabs a {
+        display: block;
+        padding: 8px 16px;
+        text-decoration: none;
+        color: #666;
+        font-size: 0.95rem;
+        transition: 0.2s;
+        border-left: 3px solid transparent;
+        margin-left: -2px;
+      }
+
+      .nav-tabs a:hover,
+      .nav-tabs a.active {
+        color: var(--color-accent);
+        border-left-color: var(--color-accent);
+        font-weight: 600;
+        background: #f7f7f7;
+      }
+
+      .sidebar-title {
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+
+      /* --- 4. Main Content Styling --- */
+      .content {
+        max-width: 800px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: var(--font-heading);
+        margin-top: 2em;
+        margin-bottom: 0.5em;
+        line-height: 1.2;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 10px;
+        margin-top: 0;
+      }
+      h3 {
+        font-size: 1.8rem;
+        color: #444;
+      }
+
+      p {
+        margin-bottom: 1.5em;
+        font-size: 1.125rem;
+      }
+
+      .info {
+        font-size: 0.85rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+      }
+
+      /* Quote styling */
+      blockquote.quote {
+        border-left: 5px solid var(--color-accent);
+        margin: 40px 0;
+        padding: 20px 30px;
+        background: #f4f4f4;
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        font-style: italic;
+        color: #444;
+      }
+
+      blockquote cite {
+        display: block;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        font-style: normal;
+        font-weight: bold;
+        color: var(--color-accent);
+      }
+
+      /* Code Block Styling */
+      pre {
+        background-color: var(--color-code-bg);
+        color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Courier New", Courier, monospace;
+        margin: 30px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      code {
+        font-family: "Courier New", Courier, monospace;
+        background: #eee;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #d63384; /* Pink code text inline */
+        font-size: 0.9em;
+      }
+
+      pre code {
+        background: transparent;
+        color: #fff;
+        padding: 0;
+      }
+
+      hr {
+        border: 0;
+        height: 1px;
+        background: #ddd;
+        margin: 50px 0;
+      }
+
+      /* Footer */
+      footer {
+        background: #f9f9f9;
+        padding: 40px 20px;
+        text-align: center;
+        margin-top: 80px;
+        border-top: 1px solid #eee;
+      }
+      footer ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      footer a {
+        text-decoration: none;
+        color: #666;
+      }
+      footer a:hover {
+        color: var(--color-accent);
+      }
+
+      /* --- 5. Responsiveness (Mobile) --- */
+      @media (max-width: 850px) {
+        .page-container {
+          margin: 0 auto;
+          grid-template-columns: 1fr; /* Stack vertically */
+          padding-top: 0;
+        }
+
+        .sidebar {
+          position: sticky;
+          top: 0;
+          background: var(--color-bg);
+          z-index: 100;
+          padding: 10px 0;
+          border-bottom: 1px solid #eee;
+          width: 100%;
+        }
+
+        .nav-tabs {
+          display: flex; /* Horizontal tabs */
+          overflow-x: auto; /* Scrollable if too many */
+          white-space: nowrap;
+          border-left: none;
+          gap: 10px;
+          padding-bottom: 5px;
+        }
+
+        .nav-tabs a {
+          border-left: none;
+          border-bottom: 3px solid transparent;
+          background: #f5f5f5;
+          border-radius: 4px;
+          margin: 0;
+        }
+
+        .nav-tabs a:hover,
+        .nav-tabs a.active {
+          border-bottom-color: var(--color-accent);
+          border-left-color: transparent;
+        }
+
+        .sidebar-title {
+          display: none; /* Hide 'Contents' label on mobile to save space */
+        }
+
+        h2 {
+          font-size: 2rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="hero">
-      <h1>A blog Post</h1>
-      <p>
-        Typography is one of the most important elements of front end design and
-        development! In this exercise, we'll play around with some of the common
-        CSS properties to manage and style our fonts by making a nice blog
-        post-like web page.
-      </p>
-      <hr />
-    </div>
+    <div class="page-container">
+      <aside class="sidebar">
+        <div class="sidebar-title">Contents</div>
+        <ul class="nav-tabs">
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#typography">Typography Basics</a></li>
+          <li><a href="#quotes">Quotes & Styling</a></li>
+          <li><a href="#code-example">Code Example</a></li>
+          <li><a href="#text-transform">Text Transform</a></li>
+          <li><a href="#headings">Headings Levels</a></li>
+          <li><a href="#units">CSS Units (px, em, rem)</a></li>
+        </ul>
+      </aside>
 
-    <div class="content">
-      <p class="info">12.31.2050 | <span>ALL ABOUT CSS BLOG</span></p>
-      <h2>All About Typography</h2>
-      <p class="headline">
-        Headlines, like this one, are great ways to quickly capture the reader's
-        attention, to give them a sumary, intro, or other important information
-        in a web page. You can use <code>text-transform: uppercase;</code> to
-        make a whole body of text uppercase using CSS if you really need to grab
-        attention!
-      </p>
+      <main class="content">
+        <p class="info">12.31.2050 | <span>ALL ABOUT CSS BLOG</span></p>
 
-      <p>
-        Okay, now that we're done screaming in the headline in all caps (which
-        you should do sparingly) - it's time to chat more about other components
-        of typography. You'll notice that we chose a nice serif font for our
-        headings, and a nice sans-serif font for our body text. This is
-        intentional! Serif font faces are generally considered pretty
-        inaccessible as a body text style, since at smaller sizes it's much more
-        difficult to visually differentiate the characters from one another. At
-        large font sizes, such as those seen in most headings, serif fonts are
-        considered fine, since the larger style makes it easier to see where
-        serif characters start and where they end.
-      </p>
+        <h2 id="intro">All About Typography</h2>
 
-      <p>
-        But wait! What if you want more than just normal text on your page?
-        Another common thing you might see in web pages are quotes. To make
-        quotes, we can use the blockquote element and style it accordingly, so
-        it stands out a bit as a non-body text quote.
-      </p>
-
-      <blockquote class="quote">
-        "This is a quote - you probably knew that at a glance since we gave it
-        some nice styling. Pretty nice, huh? A great lesson in User Experience
-        Design, where we take special care to implement our web page in a way
-        that makes it pleasant and intuitive for our users/readers.
-        Differentiating our different typography components visually makes
-        information much more organized and easier to digest for our users."
-        <cite>– A wise person</cite>
-      </blockquote>
-
-      <hr />
-
-      <h3>a new section</h3>
-
-      <p>
-        And just like that, we've got a new section of content separated by a
-        <code>hr</code>
-        element (a 'horizontal rule' or a divider) and a new heading. Isn't
-        putting content together fun?
-      </p>
-
-      <p>
-        Notice as well that when we entered in the <code>H3</code> content, it
-        was all lowercase, but now it's in a nice Title Case, where the first
-        letter of each word is capitalized. We did that with CSS! Using
-        <code>text-transform: capitalize;</code> we can implement title cased
-        content.
-      </p>
-
-      <h4>Heading 4</h4>
-
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
-        est dapibus, viverra metus ac, fermentum libero. Integer lobortis enim
-        ac arcu malesuada ultrices. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </p>
-
-      <h5>Heading 5</h5>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
-        est dapibus, viverra metus ac, fermentum libero. Integer lobortis enim
-        ac arcu malesuada ultrices. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </p>
-
-      <h6>Heading 6</h6>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
-        est dapibus, viverra metus ac, fermentum libero. Integer lobortis enim
-        ac arcu malesuada ultrices. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </p>
-
-      <hr />
-
-      <h3>Common Font Sizing Approaches</h3>
-
-      <h4><code>px</code> (pixels)</h4>
-      <p>
-        Pixels are the simplest way to hard code your font size. By default the
-        browser sets the root font size to <code>16px</code>, but you can change
-        the font size in the <code>body</code> element or any other HTML element
-        by setting <code>font-size</code> to any number of <code>px</code>.
-      </p>
-
-      <h4><code>em</code></h4>
-      <p>
-        <code>em</code> units size font relative to the parent element. For
-        example, if the <code>body</code> element is <code>16px</code>, and a
-        nested <code>div</code> element's font size is set to
-        <code>1.5em</code>, the browser will multiply 16px x 1.5, resulting in
-        <code>24px</code> font in the div.
-      </p>
-
-      <h4><code>rem</code> (root em)</h4>
-      <p>
-        Root <code>em</code> units are similar to <code>em</code>, but they are
-        relative to the root font size instead of the parent element of whatever
-        is being styled. For example, if the root font size (the font size of
-        the <code>body</code> element) is set to 16px, and we have a
-        <code>p</code> element nested many layers down with a font-size set to
-        <code>2rem</code>, that paragraph will have 32px font. If the body font
-        size ever changes, this paragraph will also change accordingly.
-      </p>
-
-      <h4>Which one do I use?</h4>
-      <p>
-        Great question! Generally, people try to stick to using em or rem over
-        px, since they make responsive typography that scales up and down across
-        different device widths much easier. Using px for your font sizes is not
-        as dynamic, and you may find that writing media queries to update all
-        the various element font sizes in pixels at different screen widths is
-        not the most scalable approach to typography.
-      </p>
-
-      <p>
-        Between em and rem, rem has a nice advantage of all elements being
-        relative to one single root font value, where nested elements with
-        parent/child font size dependencies can still be hard to manage with em
-        units. When writing responsive styles, rem allows you to simply update
-        the root font size at different screen sizes and all elements using rem
-        units will adjust themselves accordingly creating a super easy-to-manage
-        typography size system.
-      </p>
-
-      <p>
-        In small projects you may not have an issues hard coding pixelage, but
-        it's always important to understand the drawbacks of writing styles that
-        may not be responsive or dynamic.
-      </p>
-      <!-- <header>
-        <h1>A Blog Post</h1>
-        <p>
-          Typography is one of the most important elements of front end design
-          and development! In this exercise, we'll play around with some of the
-          common CSS properties to manage and style our fonts by making a nice
-          blog post-like web page.
+        <p class="headline">
+          Headlines, like this one, are great ways to quickly capture the
+          reader's attention, to give them a summary, intro, or other important
+          information in a web page. You can use
+          <code>text-transform: uppercase;</code> to make a whole body of text
+          uppercase using CSS if you really need to grab attention!
         </p>
+
+        <h3 id="typography">Typography Basics</h3>
+        <p>
+          Okay, now that we're done screaming in the headline in all caps (which
+          you should do sparingly) - it's time to chat more about other
+          components of typography. You'll notice that we chose a nice serif
+          font (<em>Bitter</em>) for our headings, and a nice sans-serif font
+          (<em>Mukta</em>) for our body text. This is intentional! Serif font
+          faces are generally considered pretty inaccessible as a body text
+          style.
+        </p>
+
+        <h3 id="quotes">Quotes & Styling</h3>
+        <p>
+          But wait! What if you want more than just normal text on your page?
+          Another common thing you might see in web pages are quotes.
+        </p>
+
+        <blockquote class="quote">
+          "This is a quote - you probably knew that at a glance since we gave it
+          some nice styling. Pretty nice, huh? Differentiating our different
+          typography components visually makes information much more organized."
+          <cite>– A wise person</cite>
+        </blockquote>
+
         <hr />
-      </header> -->
+
+        <h3 id="code-example">Code Example</h3>
+        <p>
+          Here is how we might style that quote block using CSS. We use the
+          <code>blockquote</code> selector and add a left border.
+        </p>
+        <pre><code>blockquote {
+  border-left: 5px solid #d946ef;
+  background-color: #f4f4f4;
+  padding: 20px;
+  font-style: italic;
+  font-family: serif;
+}</code></pre>
+
+        <hr />
+
+        <h3 id="text-transform">A New Section</h3>
+        <p>
+          And just like that, we've got a new section of content separated by a
+          <code>hr</code> element. Notice as well that when we entered in the
+          <code>H3</code> content, it was all lowercase, but now it's in a nice
+          Title Case. We did that with CSS! Using
+          <code>text-transform: capitalize;</code>.
+        </p>
+
+        <h3 id="headings">Heading Levels</h3>
+        <h4>Heading 4</h4>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
+          est dapibus, viverra metus ac, fermentum libero.
+        </p>
+        <h5>Heading 5</h5>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae
+          est dapibus, viverra metus ac, fermentum libero.
+        </p>
+        <h6>Heading 6</h6>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+        <hr />
+
+        <h3 id="units">Common Font Sizing Approaches</h3>
+
+        <h4><code>px</code> (pixels)</h4>
+        <p>
+          Pixels are the simplest way to hard code your font size. By default
+          the browser sets the root font size to <code>16px</code>.
+        </p>
+
+        <h4><code>em</code></h4>
+        <p>
+          <code>em</code> units size font relative to the parent element. For
+          example, if the <code>body</code> element is <code>16px</code>, and a
+          nested <code>div</code> element's font size is set to
+          <code>1.5em</code>, the browser will multiply 16px x 1.5.
+        </p>
+
+        <h4><code>rem</code> (root em)</h4>
+        <p>
+          Root <code>em</code> units are similar to <code>em</code>, but they
+          are relative to the root font size instead of the parent element. This
+          is generally preferred for responsiveness.
+        </p>
+
+        <h4>Which one do I use?</h4>
+        <p>
+          Great question! Generally, people try to stick to using em or rem over
+          px, since they make responsive typography that scales up and down
+          across different device widths much easier.
+        </p>
+      </main>
     </div>
 
-    <!-- Footer -->
     <footer>
       <ul>
         <li><a href="/privacy-policy">Privacy Policy</a></li>
         <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
         <li><a href="/about">About</a></li>
         <li><a href="/contact">Contact Us</a></li>
-        <li><a href="/more-info">More Info</a></li>
       </ul>
     </footer>
   </body>

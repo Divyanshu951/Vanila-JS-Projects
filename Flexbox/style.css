@@ -1,0 +1,157 @@
+body {
+  font-family: "Mukta", sans-serif;
+  text-align: center; /* centers inline elements like buttons/text */
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  width: 100%;
+  max-width: 800px;
+  margin: 50px auto; /* centers the whole page horizontally */
+}
+
+.content {
+  padding: 20px;
+  text-align: left; /* so paragraphs aren't centered */
+}
+
+.content p {
+  padding: 10px;
+  border-left: 2px solid #e95400;
+}
+
+code {
+  color: #e95400;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 5px 20px;
+  background: lightblue;
+  border: none;
+  border-radius: 4px;
+  transition: transform 0.3s;
+}
+
+.btn:hover {
+  transform: scale(0.9);
+}
+
+/* ################## */
+/*  Playground code   */
+/* ################## */
+
+.flex-container {
+  padding: 10px;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  height: 400px;
+
+  /* Flex properties */
+  display: flex;
+  /* flex-direction: column; */
+  /* flex-wrap: wrap; */
+  gap: 10px;
+  /* align-content: stretch; */
+
+  /* justify-content: end; */
+  /* align-items: stretch; */
+}
+
+.flex-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  color: #000;
+
+  border-radius: 4px;
+  width: 100px;
+  height: 100px;
+  background-color: #c41ec4;
+}
+
+.special {
+  color: #fff;
+  background-color: green;
+  /* flex-basis: 500px; */
+  flex: 1; /* 1 1 0%*/
+}
+
+.special2 {
+  color: #fff;
+  background-color: orangered;
+  flex: 1; /* 1 1 0%*/
+}
+
+/* ################## */
+/*      Page code     */
+/* ################## */
+
+.flex-direction-playground {
+  border: 1px solid gray;
+  display: flex;
+}
+
+.flex-direction-properties {
+  flex-basis: 50%;
+}
+
+.flex-direction-properties ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flex-direction-properties ul li {
+  cursor: pointer;
+  border: 1px solid gray;
+  padding: 10px 16px;
+  margin-right: 30px;
+  transition: all 0.3s;
+}
+
+.flex-direction-properties ul li:hover {
+  background-color: gray;
+}
+
+.flex-direction-demo {
+  border-left: 1px solid gray;
+  flex-basis: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-direction-demo .flex-direction-demo-container {
+  border: 1px solid gray;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.flex-direction-demo .flex-direction-demo-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  width: 60px;
+  background-color: gray;
+}

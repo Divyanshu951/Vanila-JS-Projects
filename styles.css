@@ -1,6 +1,4 @@
-/* Reset & Base Styles */
-
-body {
+/* Reset & Base Styles body {
   font-family: "Mukta", sans-serif;
   font-size: 16px;
   letter-spacing: 0.5px;
@@ -69,7 +67,7 @@ h6 {
 
 hr {
   width: 50%;
-  margin: 32px 0;
+  margin: 32px;
 }
 
 .content {
@@ -144,4 +142,41 @@ footer ul li a {
 
 footer ul li a:hover {
   text-decoration: underline;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.hero,
+.hero2,
+.hero3,
+.hero4 {
+  height: 100vh;
+  width: 100vw;
+}
+
+.hero {
+  background-color: red;
+}
+
+.hero2 {
+  background-color: rgb(0, 151, 81);
+}
+
+.hero3 {
+  background-color: rgb(52, 10, 124);
+}
+
+.hero4 {
+  background-color: rgb(31, 163, 163);
+}
+
+h1 {
+  /* font-size: 100vh; */
+}
+
+p {
+  font-size: 2rem;
 }

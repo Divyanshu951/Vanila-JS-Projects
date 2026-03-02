@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Positioning</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="content">
+        <div class="box">
+          <div class="another-box"></div>
+        </div>
+
+        <input type="range" name="range-top" id="range-top" max="10" step="1" />
+
+        <div class="btn-section">
+          <button>Static</button>
+          <button>relative</button>
+          <button>absolute</button>
+          <button>fixed</button>
+          <button>sticky</button>
+        </div>
+
+        <hr />
+
+        <h1>Positioning:</h1>
+        <p>
+          The position CSS property sets how an element is positioned in a
+          document. The <code>top</code>, <code>right</code>,
+          <code>bottom</code>, and <code>left</code> physical properties and the
+          <code>inset-block-start</code>, <code> inset-block-end</code>,
+          <code>inset-inline-start</code>, <code>and inset-inline-end </code>
+          flow-relative logical properties can be used to determine the final
+          location of positioned elements.
+        </p>
+
+        <div class="codebox">
+          <code class="cmt">/* position values */</code><br />
+          <code>position: static; <code class="cmt">/* Default */</code></code
+          ><br />
+          <code>position: relative;</code><br />
+          <code>position: absolute;</code><br />
+          <code>position: fixed;</code><br />
+          <code>position: sticky;</code><br />
+        </div>
+
+        <h2>1. Relative:</h2>
+        <p>
+          Element fit in the normal flow of the doc, but <code>top</code>,
+          <code>bottom</code>, <code>left</code>, <code>right</code>, and
+          <code>Z-index</code> can be used to scoot the element from it's
+          default spot.
+          <em>
+            Even if the element is offset it's original space in docis
+            maintained</em
+          >
+        </p>
+
+        <div
+          class="relative-container"
+          style="
+            display: flex;
+            gap: 10px;
+            position: relative;
+            margin-bottom: 60px;
+          "
+        >
+          <div
+            style="
+              border: 3px solid red;
+              width: 100px;
+              height: 100px;
+              background-color: #d8d1d1;
+            "
+          ></div>
+          <div
+            style="
+              background-color: #fff;
+              border: 3px dashed green;
+              width: 100px;
+              height: 100px;
+              position: absolute;
+              top: 0px;
+              left: 110px;
+            "
+          ></div>
+          <div
+            style="
+              background-color: #d8d1d1;
+
+              border: 3px solid green;
+              width: 100px;
+              height: 100px;
+              position: relative;
+              top: 20px;
+              left: 20px;
+            "
+          ></div>
+          <div
+            style="
+              background-color: #d8d1d1;
+              border: 3px solid magenta;
+              width: 100px;
+              height: 100px;
+            "
+          ></div>
+          <p>The green cube moves offset to it's original space in the doc.</p>
+        </div>
+
+        <h2>2. Absolute:</h2>
+        <p>
+          Element is removed from natural doc flow, and is now relative to the
+          nearest parent which has an explecit <code>position</code> property.
+          If no element has a position property other than
+          default(<code>static</code>), it's relative to the root container.
+
+          <em> No space is left where it used to be!</em>
+        </p>
+        <div
+          class="absolute-container"
+          style="
+            display: flex;
+            gap: 10px;
+            position: relative;
+            margin-bottom: 60px;
+          "
+        >
+          <div
+            style="
+              border: 3px solid red;
+              width: 100px;
+              height: 100px;
+              background-color: #d8d1d1;
+            "
+          ></div>
+          <div
+            style="
+              background-color: #d8d1d1;
+
+              border: 3px solid green;
+              width: 100px;
+              height: 100px;
+              position: absolute;
+              top: 20px;
+              left: 20px;
+            "
+          ></div>
+          <div
+            style="
+              background-color: #d8d1d1;
+              border: 3px solid magenta;
+              width: 100px;
+              height: 100px;
+            "
+          ></div>
+        </div>
+        <h3>Example:</h3>
+        <button id="increment-btn" class="btn">
+          Increment
+          <span
+            id="counter"
+            style="
+              background-color: #4caf50;
+              border: 2px solid black;
+              color: #fff;
+              display: inline-block;
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              position: absolute;
+              top: -12px;
+              right: -12px;
+            "
+            >0</span
+          >
+        </button>
+
+        <h2>3. Fixed:</h2>
+        <p>
+          Element is removed from natural doc flow, and is now relative to the
+          root container.
+
+          <em>
+            No space is left where it used to be!, And remains in the same place
+            if scrolled. It can be said that it is fixed to the view point</em
+          >
+        </p>
+        <h3>Example is in the top right yellow box.</h3>
+        <div class="fixed-box">Fixed</div>
+
+        <hr />
+        <hr />
+        <h1>Transitions:</h1>
+        <p>
+          A CSS transition is a feature that lets you smoothly animate changes
+          to CSS property values over a given duration, instead of the change
+          happening instantly.
+        </p>
+        <p>
+          Syntax: transition:
+          <code> property duration timing-function delay; </code>
+        </p>
+        <div
+          class="transition-hover"
+          style="
+            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          Hover Me
+        </div>
+
+        <p style="display: inline-block; margin-left: 20px">
+          This is also a bad idea, Using wodth with transition has performace
+          degradtion issue.
+        </p>
+        <div class="transition-timing">
+          <ul>
+            <p>smooth and natural overall</p>
+            <li style="transition: width 2s ease">ease</li>
+            <p>crawls at start, then picks up speed</p>
+            <li style="transition: width 2s ease-in">ease-in</li>
+            <p>jumps quickly, slows before stopping</p>
+            <li style="transition: width 2s ease-out">ease-out</li>
+            <p>soft beginning, rush in middle, soft end</p>
+            <li style="transition: width 2s ease-in-out">ease-in-out</li>
+            <p>robotic, consistent speed</p>
+            <li style="transition: width 2s linear">linear</li>
+            <p>
+              The steps() function divides the animation duration into equal
+              intervals.
+            </p>
+            <li style="transition: width 3s steps(15, jump-start)">Steps</li>
+          </ul>
+        </div>
+        <hr />
+        <hr />
+        <h1>Transform:</h1>
+        <p>
+          The transform CSS property lets you rotate, scale, skew, or translate
+          an element. It modifies the coordinate space of the CSS visual
+          formatting model.
+        </p>
+        <h2>Translate:</h2>
+        <p>
+          The <code>translate()</code> CSS function repositions an element in
+          the horizontal and/or vertical directions. Its result is a
+          <code>transform-function</code> data type.
+        </p>
+        <div class="box-translate"></div>
+        <button class="btn transalate-btn">
+          Click to translate [translate(100px, -100px)]
+        </button>
+        <button class="btn rotate-btn">Click to rotate 30 Degrees</button>
+        <button class="btn scale-btn">Click to translate [scale(2)]</button>
+
+        <h4>Thumb Rule:</h4>
+        <p>
+          <em
+            >TRANSFORM = movement / geometry <br /><br />
+            TRANSITION = smooth change over time</em
+          >
+        </p>
+
+        <hr />
+        <hr />
+
+        <section class="card">
+          <h2>4. Transform Origin</h2>
+          <p>Change the pivot point of rotation.</p>
+
+          <div class="origin-stage">
+            <div id="origin-box" class="origin-box">
+              <div id="pivot-dot" class="pivot-dot center"></div>
+              Tap to Toggle Origin
+            </div>
+          </div>
+          <p class="code-output">
+            Current Origin: <code id="origin-text">center</code>
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
