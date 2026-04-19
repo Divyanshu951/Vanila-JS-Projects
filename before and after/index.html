@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Before and After</title>
+    <style>
+      :root {
+        --brand-color: rgb(80, 121, 12);
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-family: sans-serif;
+      }
+
+      h1 {
+        background-color: var(--brand-color);
+      }
+
+      div {
+        height: 500px;
+        width: 300px;
+        border: calc(20px - 10px) solid var(--brand-color);
+      }
+
+      button {
+        background-color: var(--brand-color);
+      }
+
+      @media screen and (max-width: 800px) {
+        :root {
+          --brand-color: red;
+        }
+
+        /* button {
+          background-color: red;
+        } */
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Hello</h1>
+      <button>Click me</button>
+    </div>
+  </body>
+</html>

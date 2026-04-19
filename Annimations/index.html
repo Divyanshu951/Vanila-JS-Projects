@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Animation</title>
+  </head>
+  <style>
+    body {
+      background-color: rgba(0, 0, 0, 0.9);
+      color: #fff;
+    }
+
+    .spinner {
+      height: 200px;
+      width: 200px;
+      border-radius: 50%;
+      border: 12px solid #cfd8dc;
+      border-top-color: #3f51b5;
+
+      animation: spin 2s ease-in-out infinite;
+    }
+
+    .loader {
+      margin-top: 100px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .loader span {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: #3f51b5;
+      border-radius: 50%;
+    }
+
+    .b1 {
+      animation: bounce 0.5s ease-in-out alternate infinite;
+    }
+
+    .b2 {
+      animation: bounce 0.5s ease-in-out 0.25s alternate infinite;
+    }
+
+    .b3 {
+      animation: bounce 0.5s ease-in-out 0.5s alternate infinite;
+    }
+
+    .box {
+      margin-top: 50px;
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 200px;
+
+      animation: move 1s ease;
+    }
+
+    @keyframes move {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(300px);
+        background-color: olive;
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: translateY(0px);
+      }
+      100% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+  <body>
+    <h1>Animation</h1>
+    <p class="quote">
+      The animation shorthand CSS property applies an animation between styles.
+      It is a shorthand for animation-name, animation-duration,
+      animation-timing-function, animation-delay, animation-iteration-count,
+      animation-direction, animation-fill-mode, animation-play-state, and
+      animation-timeline.
+    </p>
+    <br />
+    <p><em>Syntax: @keyframe identifier {}</em></p>
+
+    <br />
+    <br />
+    <h2>Properties</h2>
+    <ul>
+      <li>animation-name: myAnimation;</li>
+      <li>animation-duration: 4s;</li>
+      <li>animation-iteration-count: 2;</li>
+      <li>animation-direction: alternate-reverse;</li>
+    </ul>
+    <br />
+    <hr />
+    <br />
+
+    <div class="spinner"></div>
+
+    <div class="loader">
+      <span class="b1"></span><span class="b2"></span><span class="b3"></span>
+    </div>
+
+    <div class="box"></div>
+  </body>
+</html>

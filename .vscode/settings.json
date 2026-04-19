@@ -1,3 +1,5 @@
 {
-  "liveServer.settings.port": 5503
+  "liveServer.settings.port": 5504,
+  "html-to-css-autocompletion.autocompletionFilesScope": "linked-files",
+  "cSpell.words": ["insta"]
 }

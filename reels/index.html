@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Morning Reels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="bg-gradient"></div>
+
+  <div id="app-container">
+    <div id="startup-screen">
+      <div class="startup-content">
+        <h2>Morning Reels</h2>
+        <p>Choose your session length:</p>
+        <div class="mode-options">
+          <button class="mode-btn" id="btn-short">
+            <span class="mode-title">Short Version</span>
+            <span class="mode-desc">First 10 videos</span>
+          </button>
+          <button class="mode-btn" id="btn-full">
+            <span class="mode-title">Full Version</span>
+            <span class="mode-desc">All videos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <h1>Morning Reels</h1>
+      <div class="reel-count" id="reel-count">1 / 3</div>
+    </header>
+
+    <div id="video-container">
+      <video id="player" playsinline preload="auto"></video>
+
+      <div id="play-overlay">
+        <div class="play-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+        <div class="start-text" id="start-text">Tap to start routine</div>
+      </div>
+
+      <div id="info-overlay">
+        <div class="author">
+          <div class="author-avatar">✨</div>
+          @morning_routine
+        </div>
+        <div class="description" id="video-desc">Get ready to crush the day with these morning motivation reels.</div>
+      </div>
+
+      <div id="actions-container">
+        <div class="action-btn">
+          <div class="action-icon">❤️</div>
+          <div class="action-text">Like</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon">💬</div>
+          <div class="action-text">Share</div>
+        </div>
+      </div>
+
+      <div id="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+    </div>
+
+    <div id="success-screen">
+      <h2>You're All Set!</h2>
+      <p>Morning routine complete. Now go out there and make today amazing.</p>
+      <button class="restart-btn" id="restart-btn">Watch Again</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
