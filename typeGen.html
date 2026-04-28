@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing Drill Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #111;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background: #1e1e1e;
+        padding: 25px;
+        border-radius: 12px;
+        width: 500px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      #output {
+        margin-top: 20px;
+        background: #000;
+        padding: 15px;
+        border-radius: 8px;
+        min-height: 100px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Typing Drill Generator</h2>
+
+      <label>Characters (comma separated)</label>
+      <input id="chars" type="text" placeholder="f,j,d,k" />
+
+      <label>Percentages (comma separated)</label>
+      <input id="percentages" type="text" placeholder="30,30,20,20" />
+
+      <label>Total Characters</label>
+      <input id="length" type="number" value="100" />
+
+      <button onclick="handleGenerate()">Generate + Copy</button>
+
+      <div id="output"></div>
+    </div>
+
+    <script>
+      function randomBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function generateTypingDrill(chars, percentages, totalLength) {
+        chars = chars.map((char) => char.trim()).filter((char) => char !== ""); // removes empty values
+
+        if (chars.length !== percentages.length) {
+          throw new Error("Characters and percentages count must match.");
+        }
+
+        const totalPercentage = percentages.reduce((a, b) => a + b, 0);
+
+        if (totalPercentage !== 100) {
+          throw new Error("Percentages must total exactly 100.");
+        }
+
+        const pool = [];
+
+        percentages.forEach((percent, index) => {
+          const count = Math.floor((percent / 100) * totalLength);
+
+          for (let i = 0; i < count; i++) {
+            pool.push(chars[index]);
+          }
+        });
+
+        while (pool.length < totalLength) {
+          const randomIndex = Math.floor(Math.random() * chars.length);
+          pool.push(chars[randomIndex]);
+        }
+
+        // shuffle
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        let finalString = "";
+        let currentChunk = randomBetween(3, 6);
+        let count = 0;
+
+        for (const char of pool) {
+          finalString += char;
+          count++;
+
+          if (count === currentChunk) {
+            finalString += " ";
+            count = 0;
+            currentChunk = randomBetween(3, 6);
+          }
+        }
+
+        // removes duplicate spaces + trims ends
+        finalString = finalString.replace(/\s+/g, " ").trim();
+
+        return finalString;
+      }
+
+      async function handleGenerate() {
+        try {
+          const chars = document
+            .getElementById("chars")
+            .value.split(",")
+            .map((c) => c.trim())
+            .filter(Boolean);
+
+          const percentages = document
+            .getElementById("percentages")
+            .value.split(",")
+            .map(Number);
+
+          const length = Number(document.getElementById("length").value);
+
+          const output = generateTypingDrill(chars, percentages, length);
+
+          document.getElementById("output").textContent = output;
+
+          await navigator.clipboard.writeText(output);
+
+          alert("Generated and copied to clipboard ✅");
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+    </script>
+  </body>
+</html>
