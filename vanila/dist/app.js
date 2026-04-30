@@ -95,5 +95,5 @@ function interpolateComment(id, comment, comments) {
     }
     console.log(comments);
 }
-interpolateComment(1, "hello", [1, 2, 3, 4]);
+// interpolateComment(1, "hello", [1, 2, 3, 4]);
 //# sourceMappingURL=app.js.map
