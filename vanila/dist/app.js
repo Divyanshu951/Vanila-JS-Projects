@@ -96,4 +96,67 @@ function interpolateComment(id, comment, comments) {
     console.log(comments);
 }
 // interpolateComment(1, "hello", [1, 2, 3, 4]);
+function formatLabels(...labels) {
+    if (labels.length === 0)
+        return "No labels";
+    if (labels.length === 1)
+        return `Labels: ${labels[0]}`;
+    return `Labels: ${labels.join(", ")}`;
+}
+function processMail(mail) {
+    return `  FROM: ${mail.from}
+  TO: ${mail.to.join(", ")}
+  SUBJECT: ${mail.subject}
+  BODY: ${mail.body}`;
+}
+let newUser = { ad1: "Hyderabad", ad2: "India", zipcode: 500069 };
+function isCorrect(lesson) {
+    if (lesson.kind === "multiple-choice") {
+        return lesson.studentAnswer === lesson.correctAnswer;
+    }
+    else {
+        return lesson.studentCode === lesson.solutionCode;
+    }
+}
+// Sets
+const strArr = ["one", "two", "three"];
+function findNumUniqueLabels(formattedArr) {
+    const set = new Set(strArr);
+    return set.size;
+}
+// readonly things
+// that as const makes the arr readonly
+const arr = ["apple", "banana", "grapes"];
+const a = { name: "John", age: 23 };
+const user = {
+    name: "John",
+    age: 26,
+};
+// tuples
+// A specific kind of array that has fixed structure, specific known type
+const tuple = ["String", 69, true];
+tuple.push("This can also be done ");
+// console.log(tuple);
+// console.log(tuple);
+function createTicket(prevTicket, comment) {
+    return [++prevTicket, comment, comment.toLowerCase().includes("critical")];
+}
+const [ticket, comment, yes] = createTicket(12, "i contain critical");
+// console.log(ticket, comment, yes);
+const objTuple = { prop1: 1, prop2: "two" };
+const location = { lat: 72.0, lan: 73.0 };
+const tuple3 = [234, "Nope"];
+const testDetails = ["John", 1, 2, 34];
+// console.log(testDetails);
+function tokenSize(input) {
+    const values = input.split(" ");
+    // console.log(values);
+    return [values.length / 100, ...values];
+}
+const hunter = {
+    id: 1234,
+    name: "Steve",
+    tasks: ["Nothing", "Nothing again"],
+    directReport: [234, 343],
+};
 //# sourceMappingURL=app.js.map

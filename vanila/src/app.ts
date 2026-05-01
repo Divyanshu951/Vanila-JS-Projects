@@ -148,3 +148,192 @@ function interpolateComment(
 }
 
 // interpolateComment(1, "hello", [1, 2, 3, 4]);
+
+function formatLabels(...labels: string[]) {
+  if (labels.length === 0) return "No labels";
+  if (labels.length === 1) return `Labels: ${labels[0]}`;
+  return `Labels: ${labels.join(", ")}`;
+}
+
+// console.log(formatLabels("one", "two", "three"));
+
+// Objects
+
+type Mail = {
+  from: string;
+  to: string[];
+  subject: string;
+  body: string;
+  urgent: boolean;
+};
+
+function processMail(mail: Mail) {
+  return `  FROM: ${mail.from}
+  TO: ${mail.to.join(", ")}
+  SUBJECT: ${mail.subject}
+  BODY: ${mail.body}`;
+}
+
+// console.log(
+//   processMail({
+//     from: "Divyanshu",
+//     to: ["John", "Mark", "Paul"],
+//     subject: "Result",
+//     body: "You filed bro",
+//     urgent: true,
+//   }),
+// );
+
+type MailOptional = {
+  from: string;
+  to: string[];
+  subject: string;
+  body?: string; // body is optional
+  urgent: boolean;
+};
+
+type Address = { ad1: string; ad2: string; zipcode: number };
+
+let newUser: Address = { ad1: "Hyderabad", ad2: "India", zipcode: 500069 };
+
+// console.log(newUser);
+
+// Unions of objects with a discriminant property are call "discriminated unions" or "tagged unions".
+
+type MultipleChoiceLesson = {
+  kind: "multiple-choice"; // Discriminant property
+  question: string;
+  studentAnswer: string;
+  correctAnswer: string;
+};
+
+type CodingLesson = {
+  kind: "coding"; // Discriminant property
+  studentCode: string;
+  solutionCode: string;
+};
+
+type Lesson = MultipleChoiceLesson | CodingLesson;
+
+function isCorrect(lesson: Lesson) {
+  if (lesson.kind === "multiple-choice") {
+    return lesson.studentAnswer === lesson.correctAnswer;
+  } else {
+    return lesson.studentCode === lesson.solutionCode;
+  }
+}
+
+// Sets
+
+const strArr = ["one", "two", "three"];
+
+function findNumUniqueLabels(formattedArr: string[]) {
+  const set = new Set<String>(strArr);
+  return set.size;
+}
+
+// console.log(findNumUniqueLabels(strArr));
+
+// const map = new Map<string, number>();
+
+// Dynamic key
+type MailPreference = {
+  [key: PropertyKey]: number;
+};
+
+type MailPreference2 = Record<string, boolean>;
+
+type MailName = {
+  readonly name: string;
+};
+
+// readonly things
+// that as const makes the arr readonly
+const arr = ["apple", "banana", "grapes"] as const;
+const a = { name: "John", age: 23 } as const;
+// a.age = 69;
+
+type A = { name: string; age: number };
+
+const user = {
+  name: "John",
+  age: 26,
+} as const satisfies A;
+
+// tuples
+// A specific kind of array that has fixed structure, specific known type
+
+const tuple: [string, number, boolean] = ["String", 69, true];
+tuple.push("This can also be done ");
+// console.log(tuple);
+// console.log(tuple);
+
+function createTicket(
+  prevTicket: number,
+  comment: string,
+): [number, string, boolean] {
+  return [++prevTicket, comment, comment.toLowerCase().includes("critical")];
+}
+
+const [ticket, comment, yes] = createTicket(12, "i contain critical");
+// console.log(ticket, comment, yes);
+
+const objTuple: { prop1: number; prop2: string } = { prop1: 1, prop2: "two" };
+const location: { lat: number; lan: number } = { lat: 72.0, lan: 73.0 };
+// console.log(location);
+// Instead of [string, number, boolean] where you do not know what the string num and bol is you can add label that does not make any change in code logic, It is like a comment
+
+type TupleWithLabel = [ticket: number, comment: string, yes?: boolean];
+const tuple3: TupleWithLabel = [234, "Nope"];
+type NameAndScore = [string, ...number[]];
+
+const testDetails: NameAndScore = ["John", 1, 2, 34];
+// console.log(testDetails);
+
+function tokenSize(input: string): [number, ...string[]] {
+  const values = input.split(" ");
+  // console.log(values);
+
+  return [values.length / 100, ...values];
+}
+
+// console.log(tokenSize("Hello my name iss"));
+
+// intersections
+
+type IndividualContributor = {
+  id: number;
+  name: string;
+  tasks: string[];
+};
+
+type Manager = {
+  directReport: number[];
+};
+
+type GoodManager = IndividualContributor & Manager;
+
+const hunter: GoodManager = {
+  id: 1234,
+  name: "Steve",
+  tasks: ["Nothing", "Nothing again"],
+  directReport: [234, 343],
+};
+
+type SupportBot = {
+  id: string;
+  name: string;
+  status: string;
+  language: string;
+};
+
+type TextBot = SupportBot & {
+  messageLog: string[];
+  sendMessage: (message: string) => string;
+};
+
+type VoiceBot = SupportBot & {
+  callLog: string[];
+  phoneNumber: string;
+  dialNumber: (phoneNumber: string) => string;
+};
