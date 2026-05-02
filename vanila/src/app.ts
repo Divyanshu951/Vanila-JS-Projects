@@ -452,3 +452,30 @@ interface OutageEvent extends SystemEvent {
   severity: "critical";
   durationSeconds: number;
 }
+
+// ENUM
+
+// Not must useful
+enum StatusCode {
+  OK,
+  Created,
+  BadRequest,
+  Unauthorized,
+  NotFound,
+}
+
+enum RequestSeverity {
+  Low,
+  Medium,
+  High,
+  critical,
+}
+
+function isCritical(request: RequestSeverity): boolean {
+  return request === RequestSeverity.critical;
+}
+
+// console.log(isCritical(RequestSeverity.critical));
+
+// Type Narrowing
+console.log("Num");
