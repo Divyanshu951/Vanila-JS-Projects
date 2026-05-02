@@ -2,7 +2,7 @@
 //   return price * quantity - (1 - discount);
 // }
 
-import { resolveTypeReferenceDirective } from "typescript";
+import { ModifierFlags, resolveTypeReferenceDirective } from "typescript";
 
 // // console.log(calculateTotal(200, 10, -100));
 
@@ -478,4 +478,286 @@ function isCritical(request: RequestSeverity): boolean {
 // console.log(isCritical(RequestSeverity.critical));
 
 // Type Narrowing
-console.log("Num");
+type RegularCustomer = {
+  plan: "regular";
+  tickets: number;
+  aboveLimit: boolean;
+};
+
+type PremiumCustomer = {
+  plan: "premium";
+  tickets: number;
+};
+
+type Customer = RegularCustomer | PremiumCustomer;
+
+function openTicket(customer: Customer): number {
+  if (customer.plan === "regular" && customer.aboveLimit) return -1;
+
+  return (customer.tickets = 1);
+}
+
+// Unknown type
+let varA: unknown;
+let varB: any;
+
+if (typeof varA === "string") {
+  varA.toLowerCase();
+}
+
+type PositiveSentiment = "happy" | "satisfied";
+type NegativeSentiment = "dissatisfied" | "angry";
+
+type Sentiment = PositiveSentiment | NegativeSentiment;
+type Response = { message: string; notify: Boolean };
+
+function responseToSentiment(sentiment: Sentiment): Response {
+  if (sentiment === "happy" || sentiment === "satisfied") {
+    return handlePositiveSentiment(sentiment);
+  } else if (sentiment === "dissatisfied" || sentiment === "angry") {
+    return handleNegativeSentiment(sentiment);
+  }
+
+  return { message: "We don't understand.", notify: true };
+}
+
+function handlePositiveSentiment(sentiment: PositiveSentiment): Response {
+  return sentiment === "happy"
+    ? { message: "Hooray!", notify: false }
+    : { message: "We are glad.", notify: false };
+}
+
+function handleNegativeSentiment(sentiment: NegativeSentiment): Response {
+  return sentiment === "dissatisfied"
+    ? { message: "We are sorry.", notify: false }
+    : { message: "We apologize. A manager will contact you.", notify: true };
+}
+
+type ModelSkippity = {
+  version: "3.5" | "4" | "4s";
+  search: boolean;
+};
+
+type ModelJean = {
+  version: "2" | "3" | "3.14";
+  think: boolean;
+};
+
+type Model = ModelSkippity | ModelJean;
+
+function isModelSkippity(model: Model): model is ModelSkippity {
+  return (
+    "search" in model &&
+    (model.version === "3.5" || model.version === "4" || model.version === "4s")
+  );
+}
+
+type Topic = "question" | "complaint" | "upgrade" | "refund";
+
+type Chat = {
+  topic: Topic;
+  userId: string;
+};
+
+type CountReport = {
+  questions: number;
+  complaints: number;
+  upgrades: number;
+  refunds: number;
+};
+
+function countComplaints(chats: Chat[]): CountReport {
+  let counts = { questions: 0, complaints: 0, upgrades: 0, refunds: 0 };
+  for (const chat of chats) {
+    counts = incrementCount(chat, counts);
+  }
+  return counts;
+}
+
+function incrementCount(chat: Chat, counts: CountReport): CountReport {
+  switch (chat.topic) {
+    case "question":
+      counts.questions++;
+      return counts;
+    case "complaint":
+      counts.complaints++;
+      return counts;
+    case "refund":
+      counts.refunds++;
+      return counts;
+    case "upgrade":
+      counts.upgrades++;
+      return counts;
+    default:
+      throw new Error(`Unhandled topic: ${chat.topic satisfies never}`);
+  }
+}
+
+//
+
+type UserFeedback = {
+  email?: string;
+  rating?: number;
+};
+
+function handleFeedback(feedback: UserFeedback) {
+  if (!feedback.rating || !isValidRating(feedback.rating))
+    return "Give a rating between 1 and 5.";
+
+  if (!feedback.email || !feedback.email.includes("@"))
+    return "Provide a valid email address.";
+
+  return `Thanks, ${getEmailUsername(feedback.email)}! Rating: ${ratingToString(feedback.rating)}`;
+}
+
+function getEmailUsername(email: string): string {
+  const atIndex = email.indexOf("@");
+  return atIndex !== -1 ? email.slice(0, atIndex) : email;
+}
+
+function isValidRating(rating: number): rating is 1 | 2 | 3 | 4 | 5 {
+  return (
+    rating === 1 || rating === 2 || rating === 3 || rating === 4 || rating === 5
+  );
+}
+
+function ratingToString(rating: 1 | 2 | 3 | 4 | 5): string {
+  switch (rating) {
+    case 1:
+      return "Very Bad";
+    case 2:
+      return "Bad";
+    case 3:
+      return "Average";
+    case 4:
+      return "Good";
+    case 5:
+      return "Excellent";
+  }
+}
+
+let v: string;
+
+// utility types
+
+// Partial, this makes all the property optional
+
+type User = {
+  id?: string;
+  email: string;
+};
+
+function updateUser(user: Partial<User>) {
+  if (user.id) {
+    return "can't update id";
+  }
+  if (user.email) {
+    return `updating email to ${user.email}`;
+  }
+  return "nothing to update";
+}
+
+// console.log(updateUser({ email: "lol@gmail.com" }));
+
+export interface ContactInfo {
+  email?: string;
+  phoneNumber?: string;
+}
+
+export function addBillingInfo(info: Required<ContactInfo>) {
+  return `Email: ${info.email}, Phone: ${info.phoneNumber}`;
+}
+
+// console.log(
+//   addBillingInfo({ email: "lol@gmail.com", phoneNumber: "91829283" }),
+// );
+
+// Using string as the key type
+type StringKeyDictionary = Record<string, number>;
+
+const karateScores: StringKeyDictionary = {
+  "Ralph ": 60,
+  "William ": 100,
+  "Jackie Chan": 82,
+};
+
+// We can add any string key
+karateScores["Pat Morita"] = 85;
+
+// But values must be numbers
+// Error: Type 'string' is not assignable to type 'number'
+// karateScores["Eve"] = "A+";
+
+type CatName = "miffy" | "boris" | "mordred";
+
+interface CatInfo {
+  age: number;
+  breed: string;
+}
+
+const cats: Record<CatName, CatInfo> = {
+  miffy: { age: 10, breed: "Persian" },
+  boris: { age: 5, breed: "Maine Coon" },
+  mordred: { age: 16, breed: "British" },
+};
+
+// console.log(cats);
+
+export type ModelStatus = "waiting" | "thinking" | "responding";
+
+const waitingMessage = "Awaiting prompt";
+const thinkingMessage = "Cooking";
+const respondingMessage = "Sending response";
+
+export function getStatusMessage(status: ModelStatus) {
+  const map: Record<ModelStatus, string> = {
+    waiting: waitingMessage,
+    thinking: thinkingMessage,
+    responding: respondingMessage,
+  };
+
+  return map[status];
+}
+
+// pick
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  category: string;
+  inStock: boolean;
+  images: string[];
+  reviews: { user: string; rating: number; text: string }[];
+}
+
+type ProductSummery = Pick<Product, "id" | "name" | "price">;
+
+export interface User2 {
+  id: string;
+  name: string;
+  email: string;
+  age: number;
+}
+
+// export type UserWithoutID = Pick<User2, "name" | "email" | "age">;
+
+// export function stripID(user: User2): UserWithoutID {
+//   const { name, email, age } = user;
+//   return { name, email, age };
+// }
+
+export interface User3 {
+  id: string;
+  name: string;
+  email: string;
+  age: number;
+}
+
+export type UserWithoutID = Omit<User3, "id">;
+
+export function stripID(user: User3): UserWithoutID {
+  const { name, email, age } = user;
+  return { name, email, age };
+}
