@@ -337,3 +337,118 @@ type VoiceBot = SupportBot & {
   phoneNumber: string;
   dialNumber: (phoneNumber: string) => string;
 };
+
+// never
+// the var cannot have an value ever
+
+function checkStatus(code: 1 | 2 | 3) {
+  if (code === 1) {
+    return code;
+  }
+  if (code === 2) {
+    return code;
+  }
+  if (code === 3) {
+    return code;
+  }
+}
+
+// console.log(checkStatus(3));
+
+type SupportAgent = {
+  id: number;
+  role: "agent";
+  assignedTickets: number;
+};
+
+type EndUser = {
+  id: number;
+  role: "customer";
+  submittedTicket: number;
+};
+
+type SupportAgentUser = SupportAgent | EndUser;
+// now when you give a obj lets say SupportAgentUser you can use anyone SupportAgent or EndUser so all property of any one no overlapping property
+
+const obj: SupportAgentUser = {
+  id: 23,
+  role: "agent",
+  assignedTickets: 21,
+};
+
+function getTicketCount(user: SupportAgentUser): number {
+  if (user.role === "agent") {
+    return user.assignedTickets;
+  }
+  return user.submittedTicket;
+}
+
+// interface
+// this cannot work on type in interface they merge the properties in type it throws an error
+interface SpaceShip {
+  aircraftName: string;
+  serialNumber: number;
+  pilotAssigned: string;
+}
+
+interface SpaceShip {
+  lastRepairedDayCount: number;
+}
+
+const ship1269: SpaceShip = {
+  aircraftName: "Beatles23",
+  serialNumber: 234,
+  pilotAssigned: "Kevin",
+  lastRepairedDayCount: 23,
+};
+
+interface Character {
+  name: string;
+  level: number;
+}
+
+interface Wizard extends Character {
+  spellBook: string[];
+  mana: number;
+}
+
+interface Message {
+  id: string;
+  sender: string;
+  recipient: string;
+  timestamp: number;
+}
+
+interface TextMessage extends Message {
+  text: string;
+  carrier: string;
+}
+
+interface EmailMessage extends Message {
+  subject: string;
+  body: string;
+}
+
+interface CanHaveMultipleInterface extends Message, TextMessage {
+  nope: string;
+}
+
+interface SystemEvent {
+  type: string;
+  timeStamp: number;
+  payload: string | object;
+  affectedServices: string;
+  severity: "low" | "medium" | "high" | "critical";
+}
+
+interface ErrorEvent extends SystemEvent {
+  type: "error";
+  payload: string;
+  code: number;
+}
+
+interface OutageEvent extends SystemEvent {
+  type: "outage";
+  severity: "critical";
+  durationSeconds: number;
+}

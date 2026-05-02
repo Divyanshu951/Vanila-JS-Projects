@@ -159,4 +159,35 @@ const hunter = {
     tasks: ["Nothing", "Nothing again"],
     directReport: [234, 343],
 };
+// never
+// the var cannot have an value ever
+function checkStatus(code) {
+    if (code === 1) {
+        return code;
+    }
+    if (code === 2) {
+        return code;
+    }
+    if (code === 3) {
+        return code;
+    }
+}
+// now when you give a obj lets say SupportAgentUser you can use anyone SupportAgent or EndUser so all property of any one no overlapping property
+const obj = {
+    id: 23,
+    role: "agent",
+    assignedTickets: 21,
+};
+function getTicketCount(user) {
+    if (user.role === "agent") {
+        return user.assignedTickets;
+    }
+    return user.submittedTicket;
+}
+const ship1269 = {
+    aircraftName: "Beatles23",
+    serialNumber: 234,
+    pilotAssigned: "Kevin",
+    lastRepairedDayCount: 23,
+};
 //# sourceMappingURL=app.js.map
