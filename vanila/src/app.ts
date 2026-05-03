@@ -761,3 +761,233 @@ export function stripID(user: User3): UserWithoutID {
   const { name, email, age } = user;
   return { name, email, age };
 }
+
+// Generics
+
+function transform<InputType, OutputType>(
+  inputs: InputType[],
+  update: (item: InputType) => OutputType,
+): OutputType[] {
+  const outputs: OutputType[] = [];
+  for (const input of inputs) {
+    const output = update(input);
+    outputs.push(output);
+  }
+  return outputs;
+}
+
+function fn(input: number) {
+  console.log("fn -", input);
+  return input;
+}
+
+// console.log(transform<number, number>([1, 2, 3, 4, 5], fn));
+
+function pair<A, B>(a: A[], b: B[]): [A, B][] {
+  const sol: [A, B][] = [];
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    sol.push([a[i]!, b[i]!]);
+  }
+
+  return sol;
+}
+
+const ArrA = ["lane", "hunter", "allan", "dan"];
+const arrB = [1, 2, 3, 4, 5, 6];
+
+// console.log(pair(ArrA, arrB));
+
+interface HasCost {
+  cost: number;
+}
+
+// It is like the minimum viable structure
+
+function applyDiscount<T extends HasCost>(vals: T[], discount: number): T[] {
+  const arr: T[] = [];
+  for (const val of vals) {
+    val.cost *= discount;
+    arr.push(val);
+  }
+  return arr;
+}
+
+const shoes = [
+  {
+    size: 12.5,
+    country: "US",
+    cost: 120,
+  },
+  {
+    size: 12.5,
+    country: "US",
+    cost: 110,
+  },
+];
+
+const tvs = [
+  {
+    framerate: 120,
+    brand: "Samsung",
+    cost: 500,
+  },
+  {
+    framerate: 240,
+    brand: "Vizio",
+    cost: 300,
+  },
+];
+
+const people = [
+  {
+    name: "Lane",
+  },
+  {
+    name: "Breanna",
+  },
+];
+
+const discountedShoes = applyDiscount(shoes, 0.3);
+const discountedTVS = applyDiscount(tvs, 0.5);
+
+// Error:
+// Argument of type '{ name: string; }[]' is not assignable to parameter of type 'HasCost[]
+// ... also you can't buy people what is wrong with you???
+const discountedPeople = applyDiscount(tvs, 0.2);
+
+type HasEmail = {
+  email: string;
+};
+
+// function pluckEmails<T extends HasEmail>(arr: T[]) {
+//   return arr;
+// }
+
+function pluckEmails<
+  T extends {
+    email: string;
+  },
+>(arr: T[]) {
+  return arr.map((a) => a.email);
+}
+
+// console.log(pluckEmails([{ email: "john" }, { email: "john_2" }]));
+
+type Store<T> = {
+  get(id: string): T;
+  save(id: string, item: T): void;
+  list(): T[];
+};
+
+function createStore<T>(): Store<T> {
+  const data = new Map<string, T>();
+
+  return {
+    get(id) {
+      const item = data.get(id);
+      if (!item) throw new Error("Item not found!");
+      return item;
+    },
+    save(id, item) {
+      data.set(id, item);
+    },
+    list() {
+      return [...data.values()];
+    },
+  };
+}
+
+type StoreUser = {
+  id: string;
+  name: string;
+};
+
+const userStore = createStore<StoreUser>();
+
+userStore.save("1", { id: "1", name: "Divyanshu" });
+userStore.save("2", { id: "1", name: "Divyanshu_2" });
+userStore.save("3", { id: "1", name: "Divyanshu_3" });
+
+function addAndGetItems<T>(store: Store<T>, id: string, newItem: T): T[] {
+  store.save(id, newItem);
+  return store.list();
+}
+
+type JobQueue<T> = {
+  push(job: T): void;
+  next: () => T | undefined;
+  list(): T[];
+};
+
+function createQueue<T>(): JobQueue<T> {
+  const jobs: T[] = [];
+  return {
+    push(job) {
+      jobs.push(job);
+    },
+    next() {
+      return jobs.shift();
+    },
+    list() {
+      return jobs;
+    },
+  };
+}
+
+type Job = {
+  title: string;
+  applied: boolean;
+};
+
+const queue = createQueue<Job>();
+queue.push({ title: "Analyst at JP Morgan", applied: true });
+queue.push({ title: "Analyst at JP Morgan AGAIN", applied: true });
+
+// console.log(queue.list());
+
+function transform_sm<InputType, OutputType>(
+  inputs: InputType[],
+  update: (item: InputType) => OutputType,
+): OutputType[] {
+  const outputs: OutputType[] = [];
+  for (const input of inputs) {
+    const output = update(input);
+    outputs.push(output);
+  }
+  return outputs;
+}
+
+type Human = {
+  name: string;
+  age: number;
+};
+
+const humans: Human[] = [
+  { name: "Eren", age: 15 },
+  { name: "Mikasa", age: 16 },
+  { name: "Armin", age: 15 },
+];
+
+const titanTransformer = (human: Human): string => `${human.name} is a titan!`;
+
+// console.log(titanTransformer);
+
+type Obj = {
+  text: string;
+};
+
+function summarizeFeedback<T>(data: T[]): string[] {
+  return [];
+}
+
+console.log(summarizeFeedback<Obj>([{ text: "hello" }]));
+
+// don't touch below this line
+
+function transform_smm<T, R>(inputs: T[], fn: (item: T) => R): R[] {
+  const result: R[] = [];
+  for (const item of inputs) {
+    result.push(fn(item));
+  }
+  return result;
+}
