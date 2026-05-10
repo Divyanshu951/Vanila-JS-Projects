@@ -980,11 +980,27 @@ function summarizeFeedback<T>(data: T[]): string[] {
   return [];
 }
 
-console.log(summarizeFeedback<Obj>([{ text: "hello" }]));
+// console.log(summarizeFeedback<Obj>([{ text: "hello" }]));
 
 // don't touch below this line
 
 function transform_smm<T, R>(inputs: T[], fn: (item: T) => R): R[] {
+  const result: R[] = [];
+  for (const item of inputs) {
+    result.push(fn(item));
+  }
+  return result;
+}
+
+export function summarizeFeedback2<T extends { text: string }>(
+  data: T[],
+): string[] {
+  return transform_sm_2(data, (d) => d.text);
+}
+
+// don't touch below this line
+
+function transform_sm_2<T, R>(inputs: T[], fn: (item: T) => R): R[] {
   const result: R[] = [];
   for (const item of inputs) {
     result.push(fn(item));
